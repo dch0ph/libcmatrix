@@ -1,6 +1,7 @@
 
 The library is slowly evolving, so there are no version numbers per se.  But this file lists non-trivial changes and can be used to check age.  Internally cmatrix_abi_version (introduced 1/5/09) can be used to check for changes to ABI/functionality
 
+ 5/04/21 <various>  Migration to GitHub and switch of licence (to MIT); various tweaks to reduce compilation warnings
  3/08/16 simpsonio		Add site labels to multi-row output -> ABI 3.15.0
  3/02/16 <various>		Tweaks for improved portability; base name changed to simply libcmatrix
 31/10/14 basespinsystem.cc	New nucleus properties table -> ABI 3.14.0
