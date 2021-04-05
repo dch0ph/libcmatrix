@@ -1,0 +1,19 @@
+#!/bin/sh
+./testinhomo 1 3500 500 n n - 28 n 3 - 100 > tih1ggen
+./testinhomo 1 3500 500 n y - 14 n 3 - - > tih1ged
+./testinhomo 1 3500 500 y n - 28 n 3 - - > tih1ggenherm
+./testinhomo 1 3500 500 y y - 28 n 3 - - > tih1gedherm
+./testinhomo 1 3500 500 y n - 1 30 n 3 - - > tih1sgenherm
+./testinhomo 1 3500 500 y y - 1 30 n 3 - - > tih1sedherm
+./testinhomo 1 3500 500 n n - 1 30 n 3 - - > tih1sgen
+./testinhomo 1 3500 500 n y - 1 30 n 3 - - > tih1sed
+
+#./testinhomo 2 3500 500 n n - 28 n 3 - - > tih2ggen
+#./testinhomo 2 3500 500 n y - 28 n 3 - - > tih2ged
+#./testinhomo 2 3500 500 y n - 28 n 3 - - > tih2ggenherm
+#./testinhomo 2 3500 500 y y - 28 n 3 - - > tih2gedherm
+#./testinhomo 2 3500 500 y n - 1 30 n 3 - - > tih2sgenherm
+#./testinhomo 2 3500 500 y y - 1 30 n 3 - - > tih2sedherm
+#./testinhomo 2 3500 500 n n - 1 30 n 3 - - > tih2sgen
+#./testinhomo 2 3500 500 n y - 1 30 n 3 - - > tih2sed
+grep -H Failure tih*

@@ -1,0 +1,89 @@
+
+This release of libcmatrix is intended to work with any Unix-derived operating system and an ANSI C++ compiler.  g++ versions >=3.4 are strongly recommended.  libcmatrix does push C++ templates to their limit (though not beyond the ANSI standard).  Unfortunately some compilers don't cope well with this e.g. g++ V3.3 incorrectly reports a "ambiguous class template" error.
+
+The configure script will almost certainly need tweaking for other compilers / Unices.  
+
+Windows:
+
+Compilation has most recently been tested for the Msys2 environment (win32 binaries). 
+
+
+1. Configuration
+./configure
+will run the autoconf script which creates Makefile, config.h, Makefile_template and test/Makefile
+as a function of the system configuration.  Rather than tinker with the Makefiles produced, you should alter
+compiler flags etc. by passing environment variables to configure e.g.
+ setenv CXXFLAGS -g +w2
+to set C++ compiler options (csh).  For the Bourne shell and variants use something like
+CXX=g++ CXXFLAGS="-g +w2" ./configure
+  
+Recommended options (for optimisation):
+g++: -g -O3  [-W -Wno-sign-compare options are added automatically if gcc is being used ]
+
+Optional components:
+
+"--with-atlas" on the configure command line enables use of the ATLAS
+libraries for fast matrix multiplication etc. (recommended if, but only if,
+dealing with relatively large spin systems).  By default, ATLAS is included if
+it can found.  Use "--without-atlas" to explicitly disable ATLAS.
+
+The location of the header and library files must be set in these are not already in the compile/link path e.g.
+
+CPPFLAGS="-I<atlasdir>/include" LDFLAGS="-L<atlasdir>/lib/<arch>" ./configure
+
+where <atlasdir> is the location of the ATLAS root directory and
+<arch> is the "architecture" for which ATLAS has been configured.
+If the library has been compiled with ATLAS, then all programs 
+that use the library must be compiled with ATLAS.
+
+
+"--with-acml" "--with-mkl"  ACML and Intel MKL an alternative to ATLAS for AMD- and Intel- based processors respectively.
+Same considerations as --with-atlas (except it is not enabled by default)
+
+
+"--with-threads" enables use of multi-threading.  A special version 
+of library libcmatrix_r.a must be compiled, together with appropriate
+options when compiling (see Makefile_template).  NB. Multi-threading
+is not being actively developed/verified.  MPI (see below) is
+a simpler option in most cases.
+
+"--with-MPI" enables use of the Message Passing Interface (MPI).
+mpi.h and -lmpi must be accessible for this to work.
+
+"--with-minuit" enables Minuit support.  If --with or --without is not set explicitly, it is automatically included if the appropriate files are found. 
+
+The configuration script first checks for the current API (Minuit2) but will work with the older C++ Minuit API if found.
+
+Check the configuration options in config.h but be sure you know what you are doing before changing anything!
+
+Note that you can recreate the Makefile's etc. after edits of say config.h without re-running configure by running config.status.
+
+2. make lib/libmatrix.a 
+will create the libcmatrix.a library.
+
+or use make all to make all versions of the library e.g. libcmatrix_r.a variant which should be used for multi-threading programs.  Other variants exist for debugging (-g) and profiling (-pg).  
+
+
+If only compiling libcmatrix for linking with other programs such as pNMRsim, stop here.
+
+No install script is currently supplied since libcmatrix is often only temporarily required for pNMRsim compilation.  If preferred, however, the contents of lib and include can be installed in say /usr/local and /usr/local/include/libcmatrix respectively.
+
+
+3. Testing
+'make all' in the test subdirectory which will create a set of test programs.
+These are mostly demonstrations of different aspects of the library rather than real stress tests.  Many programs require input; comments in the .cc
+files should give suitable values.  Don't worry if not all the programs compile - the libcmatrix API currently evolves for best interaction with pNMRsim and so the "standalone" interface is not so well defined.
+
+It is a good idea to check the performance of key operations
+such a matrix multiplication to ensure that appropriate "tuning"
+options have been selected.  The "testops" programs determines
+the floating point "throughput" (in megaflops/s) of various
+operations as a function of matrix size.  The peak performance
+should be of the same order as the CPU clock speed.
+
+
+4. Read the documentation in docs!
+
+paul.hodgkinson@durham.ac.uk
+
+

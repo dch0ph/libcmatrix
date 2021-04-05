@@ -1,0 +1,123 @@
+/* Time a load of operations */
+
+#include "cmatrix_complex.h"
+#include "List.h"
+#include "timer.h"
+#include "ttyio.h"
+
+using namespace libcmatrix;
+using namespace std;
+
+timer stopwatch;
+
+void reset()
+{
+  stopwatch.reset();
+}
+
+int UNITST;
+
+void print_usage(int ops)
+{
+  const double t=stopwatch();
+  cout << (t*1e6/UNITST) << " us   " << (ops/(stopwatch()*1e6)) << " Megaops/s" << endl;
+}
+
+void dop(const List<double> &l) { cout << "List<double>: " << l << endl; }
+
+#define TYPE complex
+
+int main(int argc,const char *argv[])
+{
+  int i;
+  int count=1;
+  const double Mflops=getfloat(argc,argv,count,"Megaops (0 for 1 iter)? ",100);
+  const int len=getint(argc,argv,count,"List length? ",32);
+  UNITST=Mflops ? int(Mflops*1e6/len) : 1;
+  const bool verbose=(len<64);
+  List<TYPE> A(len);
+  List<TYPE> B(len);
+  List<TYPE> C(len);
+
+  cout << "Simple type: " << (type_traits<TYPE>::trivialconstructor ? "Yes" : "No") << endl;
+
+  for (i=len;i--;) {
+    B(i)=i;
+    C(i)=i;
+  }
+
+  const int ops=UNITST*len;
+  cout << UNITST << " repeats\n";
+
+  cout << "\nInit A(B): ";
+  reset();
+  for (i=UNITST;i--;) List<TYPE> D(B);
+  print_usage(ops);
+
+  cout << "\nCopy A=B: ";
+  reset();
+  for (i=UNITST;i--;) A=B;
+  print_usage(ops);
+  if (verbose) cout << A << endl;
+
+  cout << "\nAddition (A=B+C): ";
+  reset();
+  for (i=UNITST;i--;) A=B+C;
+  print_usage(ops);
+  if (verbose) cout << A << endl;
+
+  cout << "\nCopy add (A=B; A+=C): ";
+  reset();
+  for (i=UNITST;i--;) {
+    A=B;
+    A+=C;
+  }
+  print_usage(ops);
+  if (verbose) cout << A << endl;
+  
+//   cout << "\nCopy subtract (A=B; A-=C): ";
+//   reset();
+//   for (i=UNITST;i--;) {
+//     A=B;
+//     A-=C;
+//   }
+//   print_usage(ops);
+//   if (verbose) cout << A << endl;
+  
+  cout << "\nSupplied-destination add(A,B,C): ";
+  reset();
+  for (i=UNITST;i--;) add(A,B,C);
+  print_usage(ops);
+  if (verbose) cout << A << endl;
+
+  const TYPE c=3.0;
+
+  cout << "\nAdd constant (A+=c): ";
+  A=B;
+  reset();
+  for (i=UNITST;i--;) A+=c;
+  print_usage(ops);
+  if (verbose) cout << A << endl;
+  
+  cout << "\nSubtract constant (A-=c): ";
+  A=B;
+  reset();
+  for (i=UNITST;i--;) A-=c;
+  print_usage(ops);
+  if (verbose) cout << A << endl;
+
+  cout << "\nAdd constant (A=B+c): ";
+  reset();
+  for (i=UNITST;i--;) A=B+c;
+  print_usage(ops);
+  if (verbose) cout << A << endl;
+  
+  A=TYPE(0);
+  cout << "\nmla: ";
+  reset();
+  for (i=UNITST;i--;) mla(A,B,C);
+  print_usage(ops);
+  if (verbose) cout << A << endl;
+
+  return 0;
+}

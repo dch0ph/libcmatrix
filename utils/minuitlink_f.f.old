@@ -1,0 +1,10 @@
+
+      SUBROUTINE MINUITINITIO
+
+      CALL IOINIT( .FALSE., .FALSE., .FALSE., 'FORT', .FALSE. )
+      CALL MINTIO(11, 6,7)
+
+      RETURN
+
+      END
+

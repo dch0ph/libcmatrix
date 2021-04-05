@@ -1,0 +1,270 @@
+#ifndef _config_h
+#define _config_h
+
+/* configuration for libcmatrix */
+
+namespace libcmatrix {
+
+//Uncomment to enable alternate input interface
+//#define LCM_ENABLE_ARGSITER
+
+//Uncomment to enable generic periodic symmetry code */
+//#define LCM_ENABLE_GENERICPERIODIC
+
+//Uncomment to enable experimental C++11 features
+#define LCM_USE_CXX11
+
+  // Allow tweaking of individual features 
+#ifdef LCM_USE_CXX11
+  // Use extern template feature of C++11 to avoid multiple template instantiation
+  // Note, however, that this means that bounds checking will only be enabled when linking against debugging version of library
+//#define LCM_USE_EXTERNTEMPLATE
+  // Use C++11 nullptr
+#define LCM_USE_NULLPTR
+#endif
+
+// Default size for scratch lists; too big and memory will be wasted, too small and new operations won't be avoided
+//Set to zero to disable "dirty" static allocation by ScratchList (slower but safer)
+#ifndef SCRATCH_SIZE
+#define SCRATCH_SIZE 96
+#endif
+
+// Maximum user defined nucleus types
+#ifndef LCM_MAX_USER_NUC 
+#define LCM_MAX_USER_NUC 32
+#endif
+
+  //Default factor to extend List's by
+#ifndef LCM_EXTEND_STACK
+#define LCM_EXTEND_STACK 1.6
+#endif
+
+  //Default extension for empty List's
+#ifndef LCM_DEFAULT_STACK
+#define LCM_DEFAULT_STACK 32
+#endif
+
+  //Total memory limit (K) of cache for given size
+#define LCM_CACHE_TOTALK 128
+  //Max size of memory block (K) that triggers caching 
+#define LCM_CACHE_MAXK 4
+
+/* Modifier for outputting size_t type
+   May be defined in ISO C99 <inttypes.h>
+   Until then use z, which is accepted by GCC */
+#define LCM_PRI_SIZE_T_MODIFIER "z"
+
+/* if non-zero, write_simpson will include SFRQ(1) tags which are not
+part of the standard SIMPSON format, but allows information about
+Larmor frequencies to be passed */
+#define LCM_ENABLE_SFRQ 1
+  
+  /* Default time precision (~number of digits). -1 use general ostream precision */
+#define LCM_DEFAULT_TIME_PRECISION 5
+
+  /* Default precision for matrix output. -1 use general ostream precision */
+#define LCM_DEFAULT_MATRIX_PRECISION -1
+ 
+//s.f. to use in ASCII output for single/double floats
+const int LCM_SINGLE_PRES=6;
+const int LCM_DOUBLE_PRES=14;
+ 
+/* Don't change these unless you know what you are
+   doing and recompile everything! */
+
+//in principle, redefine these to change the base types
+//in practice, don't bother - they are used erratically!
+typedef double float_t;  // base float type e.g. rmatrix, complex 
+//base complex type
+#define COMPLEX_T complex
+
+// Do we make a stack for Matrix<complex> ?
+#ifndef MAKE_CSTACK
+#define MAKE_CSTACK 1
+#endif
+// Create stack of 4096 elements for each square matrix size
+//const int default_stack_size=4096;
+
+// Do we make a stack for Matrix<double> ?
+#ifndef MAKE_RSTACK 
+#define MAKE_RSTACK 1
+#endif
+
+// If defined we assume that a complex is stored as two continguous float_t's
+// Note that some functions e.g. asdoubles will not work if this isn't true...
+#ifndef LCM_COMPLEX_CHEAT
+#define LCM_COMPLEX_CHEAT 1
+#endif
+
+//If LCM_DEBUG_ALLOCATOR is set, malloc is used rather than operator new 
+//to allocate memory.  Defining DMALLOC will overwrite malloc with dmalloc
+//#define LCM_DEBUG_ALLOCATOR 1
+//#define DMALLOC 1
+
+//buffer size to use for line input
+const int LINE_MAXLEN=256;
+
+/* class for fmtflags, floatfield etc. */
+#define LCM_IOS ::std::ios
+
+/* Define to inline "aggressively".  May give small performance improvement
+but at cost of bulky code */
+/* #define LCM_FORCE_INLINE */
+
+/* Define to enable C++11 features. Now configured through autoconf */
+/* #define HAVE_CXX11 1 */
+
+//Cut off for un-blocked algorithms
+#ifndef LCM_NAIVE_BELOW
+#define LCM_NAIVE_BELOW 4
+#endif
+
+//Define to enable use of SSE3 SIMD instructions for complex arithmetic
+#undef LCM_USE_SSECOMPLEX
+
+#undef LCM_ALLOW_IMPLICIT_COMPLEX
+
+/* Define if using the ATLAS BLAS library */
+#undef HAVE_LIBATLAS
+
+/* Define if using the ACML BLAS library */
+#undef HAVE_LIBACML
+
+/* Define if using the MKL maths library */
+#undef HAVE_LIBMKL
+
+/* Define if using the OpenBLAS maths library */
+#undef HAVE_LIBOPENBLAS
+
+//Cross-over values for external algorithms
+
+#ifndef LCM_INTERNAL_ZMM
+#ifdef LCM_USE_SSECOMPLEX
+#ifdef HAVE_LIBMKL
+#include "SSE_vs_MKL_xover.h"
+#else
+#include "SSE_vs_ATLAS_xover.h"
+#endif
+#else
+#ifdef HAVE_LIBMKL
+#error "Illogical combination of using MKL library without SSE optimisation"
+#else 
+#include "ATLAS_xover.h"
+#endif
+#endif
+#endif
+
+//Default iterations in Chebyshev propagation
+#define LCM_CHEBYSHEV_ITERATIONS 9
+
+//Are complex numbers passed more efficiently by reference?
+// Complex numbers now always passed by reference (as in std::complex)
+// #ifndef LCM_COMPLEX_BYREF
+// #ifdef __GNUC__
+// #define LCM_COMPLEX_BYREF 1
+// #else
+// #define LCM_COMPLEX_BYREF 0
+// #endif
+// #endif
+
+//size for matrix blocks in blocking algorithms
+//matrix must fit comfortably in L2 cache, but inefficient if too small
+#ifndef LCM_BLOCK_FACTOR
+#define LCM_BLOCK_FACTOR 16
+#endif
+
+//type to use for long long
+#define LCM_LONGLONG long long
+
+// Visual C++ hides snprintf
+#ifdef _MSC_VER
+#define LCM_SNPRINTF _snprintf
+#define LCM_COPYSIGN _copysign
+#define _USE_MATH_DEFINES
+#pragma warning( disable: 4267 )
+#pragma warning( disable: 4018 )
+#pragma warning( disable: 4800 )
+#else
+#define HAVE_UNISTD_H
+#define HAVE_STDINT_H
+#define LCM_SNPRINTF snprintf
+#define LCM_COPYSIGN copysign
+#endif
+
+
+/* Items below here should be handled by configure script
+   Only override if configure gets it wrong and/or you know what you're doing! */
+
+/* Define to enable temporary objects
+   DO NOT DO THIS IF THE COMPILER ELIDES CONSTRUCTORS FOR SIMPLE RETURN OBJECTS */
+#undef LCM_ENABLE_TEMPORARY
+
+/* Define if 128bit alignment necessary */
+#undef LCM_NEED_128BIT_ALIGN
+
+/* Define if you have the sincos function. */
+#undef HAVE_SINCOS
+
+/* Define if you have sysconf (not mingw) */
+#undef HAVE_SYSCONF
+
+/* Define if you have isfinite */
+#undef HAVE_ISFINITE
+
+/* Define if you have sys/times.h */
+#undef HAVE_SYS_TIMES_H
+
+/* Obselete references to sunmath. No longer checked */
+/* Define if you have the <sunmath.h> header file. */
+/* #undef HAVE_SUNMATH_H */
+/* Define if you have the sunmath library (-lsunmath). */
+/* #undef HAVE_LIBSUNMATH */
+
+/* Define if you have (and are using) pthread.h */
+#undef HAVE_PTHREAD_H
+
+/* Define if you have (and are using) a fully functional pthread */
+#undef HAVE_LIBPTHREAD
+
+/* Define if Fork_controller is enabled */
+/* #undef HAVE_FORK_CONTROLLER */
+
+/* Explicitly disable pthread usage if using Microsoft compiler (configure will not have been run) */
+#ifdef _MSC_VER
+#undef HAVE_PTHREAD_H
+#undef HAVE_LIBPTHREAD
+#endif
+
+/* Define if you enabling MPI */
+#undef HAVE_LIBMPI
+
+/* Allow HAVE_LIBMINUIT to be over-written */
+#ifndef HAVE_LIBMINUIT
+/* Define if you enabling Minuit */
+#undef HAVE_LIBMINUIT
+#undef MINUITVER
+#endif
+
+/* Define if unsigned int types are u_intXX_t rather than uintXX_t. */
+#undef NEED_UNDERSCORE
+
+/* Define if you have new style iostream i.e. sstream etc. */
+/* NO LONGER TESTED */
+/* #undef HAVE_SSTREAM */
+
+/* Don't change anything below here */
+
+/* Flag that functions only raise exceptions; previous versions returned error codes e.g. for file reads */
+#define LCM_EXCEPTIONS_ONLY
+
+#ifndef BOUNDS_CHECK
+#ifdef NDEBUG
+#define BOUNDS_CHECK 0
+#else
+#define BOUNDS_CHECK 1
+#endif
+#endif
+
+} //namespace libcmatrix
+
+#endif

@@ -1,0 +1,9 @@
+#!/bin/sh
+#./teststatic 2 y y y 1 > ts2Uedher
+./teststatic 2 y y n 1 > ts2Ued
+#./teststatic 2 y n y 1 > ts2Ugenher
+./teststatic 2 y n n 1 > ts2Ugen
+#./teststatic 2 n y y 1 > ts2Hedher
+#./teststatic 2 n y n 1 > ts2Hed
+#./teststatic 2 n n y 1 > ts2Hgenher
+#./teststatic 2 n n n 1 > ts2Hgen

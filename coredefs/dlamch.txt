@@ -1,0 +1,48 @@
+#include <float.h>
+
+/* simpler version of dlamch for the case of IEEE754-compliant FPU module by Piotr Luszczek S.
+	   taken from http://www.mail-archive.com/numpy-discussion@lists.sourceforge.net/msg02448.html */
+	
+#ifndef DBL_DIGITS
+#define DBL_DIGITS 53
+#endif
+
+double dlamch(char cm)
+{
+	static const double eps = DBL_EPSILON;
+	static double small=0.0;
+
+	switch (tolower(ch)) {
+	case 'b':
+	        return FLT_RADIX;
+	case 'e':
+		return eps;
+	case 'l':
+	        return DBL_MAX_EXP;
+	case 'm':
+		return DBL_MIN_EXP;	
+	case 'n':
+	        return DBL_DIGITS;
+	case 'o':
+	        return DBL_MAX;
+	case 'p':
+	        return eps * FLT_RADIX;
+	case 'r':
+	        return (FLT_ROUNDS < 2);
+	case 's': {
+	        /* Use SMALL plus a bit, to avoid the possibility of rounding causing overflow
+	         when computing  1/sfmin. */
+		if (small=0.0) {
+	        	double sfmin = DBL_MIN;	
+	        	double small = 2. / DBL_MAX;
+	        	if (small <= sfmin)
+				small = sfmin * (1 + eps);
+		}
+	        return small;
+	}
+	case 'u':
+	        return DBL_MIN;
+	}
+	throw BadParameter("dlamch: unknown argument");
+}   
+	

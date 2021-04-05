@@ -1,0 +1,25 @@
+
+AC_TRY_RUN(
+[struct funnyobj {
+  bool istemporary;
+  funnyobj(bool istempv =false) : istemporary(istempv) {};
+  funnyobj(const funnyobj&) : istemporary(false) {};
+  funnyobj& operator= (const funnyobj& ) { return *this; };
+};
+
+funnyobj makeobj()
+{
+  funnyobj d(true);
+  return d;
+}
+
+main()
+{
+  funnyobj a=makeobj();
+  exit(a.istemporary ? 1 : 0);
+}], cxx_elides="no", cxx_elides="yes")
+AC_MSG_RESULT([$cxx elides constructors: $cxx_elides])
+
+if test x$cxx_elides = xno; then
+	AC_DEFINE(LCM_ENABLE_TEMPORARY)
+fi

@@ -1,0 +1,26 @@
+CXX=@CXX@
+
+#Flags to use while testing
+DEBUGFLAGS= -g
+#Flags for fast final version
+#DEBUGFLAGS= -DNDEBUG @OPTFLAGS@
+
+# Where libcmatrix lives
+LIBCMATRIX=@CONFIGDIR@
+
+#Single threaded applications
+LIBRARIES= -lcmatrix @LIBS@ @UNSAFELIBS@
+CXXFLAGS=-I$(LIBCMATRIX)/include $(DEBUGFLAGS) @CXXFLAGS@
+
+#Multi-threaded applications
+#LIBRARIES= -lcmatrix_r @LIBS@ -lpthread
+#CXXFLAGS=@MTFLAGS@ -I$(LIBCMATRIX)/include -DLCM_REENTRANT $(DEBUGFLAGS) @CXXFLAGS@
+
+LDFLAGS=-L$(LIBCMATRIX)/lib @LDFLAGS@
+
+COMPILE=$(CXX) $(CXXFLAGS) -c
+LINK= $(CXX) $(CXXFLAGS) $(LDFLAGS)
+
+#Change name of binary and source code files
+template: template.cc
+	$(LINK) -o $@ template.cc $(LIBRARIES)

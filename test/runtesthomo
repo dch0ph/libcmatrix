@@ -1,0 +1,16 @@
+#!/bin/sh
+#./testhomo 1 3500 500 - 28 - y y 0 n 3 - > th1gedher
+#./testhomo 1 3500 500 - 28 - y n 0 n 3 - > th1ged
+#./testhomo 1 3500 500 - 28 - n y 0 n 3 - > th1ggenher
+#./testhomo 1 3500 500 - 28 - n n 0 n 3 - > th1ggen
+#./testhomo 1 3500 500 - 1 30 - y 0 n 3 - > th1sgenher
+#./testhomo 1 3500 500 - 1 30 - n 0 n 3 - > th1sgen
+
+#./testhomo 2 3500 500 - 28 - y n y 0 y 128 8 - > th2gedher
+#./testhomo 2 3500 500 - 28 - y n n 0 y 128 8 - > th2ged
+#./testhomo 2 3500 500 - 28 - n n y 0 y 128 8 - > th2ggenher
+#./testhomo 2 3500 500 - 28 - n n n 0 y 128 8 - > th2ggen
+./testhomo 2 3500 500 - 1 30 - n y 0 y 128 8 - > th2sgenher
+./testhomo 2 3500 500 - 1 30 - n n 0 y 128 8 - > th2sgen
+
+grep Fail th*

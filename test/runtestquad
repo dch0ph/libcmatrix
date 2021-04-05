@@ -1,0 +1,25 @@
+#!/bin/sh
+#./testquad 2H - 0 76MHz 0.2MHz 0 0kHz 0kHz 5000kHz 1024 15 tq14Nst0 >log0
+#./testquad 2H - 1 2MHz 0 0kHz 0kHz 5000kHz 1024 15 tq14Nst1 > log1
+#./testquad 2H - 2 76MHz 0.2MHz 0 0kHz 0kHz 5000kHz 1024 15 tq14Nst2 > log2
+#./testquad 23Na - 0 5MHz 2MHz 0 0kHz 5000kHz 1024 0 15 tq23Nast0 >log0
+#./testquad 23Na - 1 2MHz 0 0kHz 5000kHz 1024 0 15 tq23Nast1 > log1
+#./testquad 23Na - 2 5MHz 2MHz 0 0kHz 5000kHz 1024 0 15 tq23Nast2 > log2
+#./testquad 2H - 0 76MHz 0.2MHz 0 15kHz 30 15kHz 0.1 32 32 - 2048 10 tq2Hsp0 >log0
+#./testquad 2H - 1 0.2MHz 0 15kHz 30 15kHz 0.1 32 32 - 2048 10 tq2Hsp1 >log1
+#./testquad 2H - 2 76MHz 0.2MHz 0 15kHz 30 15kHz 0.1 32 32 - 2048 3 tq2Hsp2 >log2
+#./testquad 23Na - 0 20MHz 2MHz 0 0 250kHz 32 32 - 1024 13 tq23Nasp0 >log0
+#./testquad 23Na - 1 2MHz 0 0 250kHz 32 32 - 1024 13 tq23Nasp1 >log1
+#./testquad 23Na - 2 20MHz 2MHz 0 0 250kHz 32 32 - 1024 13 tq23Nasp2 >log2
+#./testquad 14N 13C 0 12MHz 2MHz 0 0kHz 1kHz 0 0Hz 0kHz 10kHz 1024 14 tq14N13Cst0 >log0
+#./testquad 14N 13C 1 2MHz 0 0kHz 1kHz 0 0Hz 0kHz 10kHz 1024 14 tq14N13Cst1 >log1
+#./testquad 14N 13C 2 12MHz 2MHz 0 0kHz 1kHz 0 0Hz 0kHz 10kHz 1024 14 tq14N13Cst2 >log2
+#./testquad 14N 13C 0 12MHz 2MHz 0 0kHz 1kHz 0 0Hz 10kHz - 1 4 - 1024 12 tq14N13Csp0 >log0
+#./testquad 14N 13C 1 2MHz 0 0kHz 1kHz 0 0Hz 10kHz - 1 4 - 1024 12 tq14N13Csp1 >log1
+#./testquad 14N 13C 2 12MHz 2MHz 0 0kHz 1kHz 0 0Hz 10kHz - 1 4 - 1024 12 tq14N13Csp2 >log2
+#./testquad 14N 2H 0 12MHz 2MHz 0 0kHz 0MHz 0.2MHz 0 1kHz 0 0Hz 0kHz 500kHz 512 14 tq14N2Hst0 >log0
+#./testquad 14N 2H 1 2MHz 0 0kHz 0.2MHz 0 1kHz 0 0Hz 0kHz 500kHz 512 14 tq14N2Hst1 >log1
+#./testquad 14N 2H 2 12MHz 2MHz 0 0kHz 0MHz 0.2MHz 0 1kHz 0 0Hz 0kHz 500kHz 512 14 tq14N2Hst2 >log2
+#./testquad 14N 2H 0 36Hz 7MHz 0 0kHz 0MHz 0.2MHz 0 1kHz 0 0Hz 16kHz 32 32 - 16384 9 tq14N2Hsp0 >log0
+#./testquad 14N 2H 1 7MHz 0 0kHz 0.2MHz 0 1kHz 0 0Hz 16kHz 32 32 - 16384 9 tq14N2Hsp1 >log1
+#./testquad 14N 2H 2 36MHz 7MHz 0 0kHz 0MHz 0.2MHz 0 1kHz 0 0Hz 16kHz 32 32 - 16384 9 tq14N2Hsp2 >log2

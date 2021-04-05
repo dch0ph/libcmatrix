@@ -1,0 +1,57 @@
+if test -z "$CXXFLAGS"; then
+	DEFCXXFLAGS=
+else
+	DEFCXXFLAGS=$CXXFLAGS
+fi
+
+DEFMTFLAGS=
+DEFOPTFLAGS="-O2"
+
+AC_PROG_CXX
+AC_LANG([C++])
+
+prog_sunpro="no"
+if test x$ac_cv_cxx_compiler_gnu = xyes; then
+	if test -z "$SSEFLAGS"; then
+		SSEFLAGS="-msse3 -mfpmath=sse"
+	fi
+	AC_DEFINE(HAVE_ISFINITE)
+	CXXFLAGS="$DEFCXXFLAGS -Wall -Wno-sign-compare"
+	AC_CANONICAL_HOST
+	case $host_os in
+		*cygwin* ) CPPFLAGS="$CPPFLAGS -mno-cygwin";;
+	esac
+else
+	CXXFLAGS=$DEFCXXFLAGS
+	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[#ifndef __SUNPRO_CC
+	choke me
+#endif
+	]])],[prog_sunpro="yes"],[])
+	AC_MSG_RESULT([Sun Workshop compiler: $prog_sunpro])
+
+	if test x$prog_sunpro = xyes; then
+		DEFMTFLAGS="-mt"
+		DEFAR="$CXX -xar $CXXFLAGS -o"
+		DEFOPTFLAGS="-fast -xO3 -fsimple=1"
+	fi
+fi
+
+if test -z "$MTFLAGS"; then
+	MTFLAGS=$DEFMTFLAGS
+fi
+
+AC_ARG_WITH(sse,
+	AS_HELP_STRING([--with-sse],[enable use of SSE3 instructions for complex arithmetic (default=no)]),,with_sse=no)
+if test x$with_sse = xyes; then
+	if test -z "$SSEFLAGS"; then
+		AC_MSG_FAILURE([--with-sse specified, but don't know how to enable SSE3 for compiler (set SSEFLAGS)])
+	else
+		CPPFLAGS="$CPPFLAGS $SSEFLAGS"
+		AC_DEFINE(LCM_USE_SSECOMPLEX)
+		AC_DEFINE(LCM_NEED_128BIT_ALIGN)
+	fi
+fi
+
+if test -z "$OPTFLAGS"; then
+	OPTFLAGS=$DEFOPTFLAGS
+fi

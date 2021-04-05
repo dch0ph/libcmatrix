@@ -1,0 +1,32 @@
+#ifndef _Euler_h_
+#define _Euler_h_
+
+#include <iostream>
+
+namespace libcmatrix {
+
+  struct Euler {
+    double alpha;
+    double beta;
+    double gamma;
+    Euler() : alpha(0.0), beta(0.0), gamma(0.0) {}
+    Euler(double a,double b,double g) : alpha(a), beta(b), gamma(g) {}
+    
+    friend std::ostream &operator << (std::ostream &,const Euler &);
+    
+    Euler& operator*= (double x) { alpha*=x; beta*=x; gamma*=x; return *this; }
+    Euler& operator/= (double x) { alpha/=x; beta/=x; gamma/=x; return *this; }
+
+    friend bool operator== (const Euler& x, const Euler& y)
+    { return (x.beta==y.beta) && (x.alpha==y.alpha) && (x.gamma==y.gamma); }
+
+    friend bool operator!= (const Euler& x, const Euler& y)
+    { return  (x.beta!=y.beta) || (x.alpha!=y.alpha) || (x.gamma!=y.gamma); }
+
+    friend bool operator! (const Euler& x)
+    { return (x.beta!=0.0) || (x.alpha!=0.0) || (x.gamma!=0.0); }
+  };
+
+}
+
+#endif

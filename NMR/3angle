@@ -1,0 +1,29 @@
+  static int value1[] = {  10,   20,   30,   40,   50,  100,  150,  200,
+                          300,  400,  500,  600,  700,  800,  900, 1000,
+                         1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800,
+                         1900, 2000, 2100, 2200, 2300, 2400, 2500, 2750,
+                         3000, 3500, 4000, 4500, 5000, 6000, 7000,
+                        10000, 50000};
+  static int value2[] = {   3,    3,    7,    3,    5,   15,   35,   55,
+                           89,  127,   97,  103,  145,  189,  233,  313,
+                          523,  573,  447,  159,  139,  205,  321,  291,
+                          671,  297,  395,  697,  527,  549,  363,  739,
+                          637,  647,  403,  437, 1197,  531, 1889,
+                         3189, 9027};
+  static int value3[] = {   5,    7,   11,   15,   13,   47,   63,   81,
+                          137,  187,  229,  265,  223,  257,  355,  477,
+                          391,  181,  191,  553,  621,  551,  789,  481,
+                          829,  479,  993,  887,  827,  841,  917, 1131,
+                          933, 1069,  945, 1555, 1715, 1891, 2747,
+                         4713, 14857};
+This is the typical code I use to generate the Euler angles. qu is a
+parameter which is used as an index into the tables to determine the
+quality of the powder average:
+
+  for(count=0; count<value1[qu]; ++count)
+  { beta  = 180.0 * count/value1[qu];
+    alpha = 360.0 * ((value2[qu]*count) % value1[qu])/value1[qu];
+    gamma = 360.0 * ((value3[qu]*count) % value1[qu])/value1[qu];
+
+- --
+3[qu]*count) % value1[qu])/value1[qu];

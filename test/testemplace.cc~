@@ -1,0 +1,15 @@
+//#include "List.h"
+
+int main()
+{
+  struct intpair {
+    intpair(int x, int y) x_(x), y_(y) {}    
+    intpair(const intpair &) = delete;
+    void operator= (const intpair&) = delete;
+    void print(std::ostream& ostr =std::cout) { ostr << "x=" << x_ << ", y=" << y << '\n'; }
+  };
+  
+  intpair fred(2,3);
+  fred.print();    
+  return 0;
+}

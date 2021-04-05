@@ -1,0 +1,70 @@
+#!/bin/sh
+rm test*FID crys*FID
+#./testcrystal 2 1 45 - 100 - y n test21n 1 > outtest21n
+#./testcrystal 2 1 45 - 100 - y y  test21y 1 > outtest21y
+#./testcrystal 2 1 45 - 100 - n n  crys21n 1 > outcrys21n
+#./testcrystal 2 1 45 - 100 - n y crys21y 1 > outcrys21y
+./testcrystal 1 2 0 200 - y 0 n y testh12n 1 > outtesth12n
+#./testcrystal 1 2 0 200 - y 0 y y testh12y 1 > outtesth12y
+#./testcrystal 1 2 0 200 - n 0 n y crysh12n 1 > outcrysh12n
+#./testcrystal 1 2 0 200 - n 0 y y crysh12y 1 > outcrysh12y
+#./compspec - - testh12* crysh12* 
+#grep '[0-9] of ' outtest12* outcrys12*
+#./testcrystal 1 3 0 100 - y 0 n test13n 1 > outtest13n
+#./testcrystal 1 3 0 100 - y 0 y test13y 1 > outtest13y
+#./testcrystal 1 3 0 100 - n 0 n n crys13nn 1 > outcrys13nn
+#./testcrystal 1 3 0 100 - n 0 y n crys13yn 1 > outcrys13yn
+#./testcrystal 1 3 0 100 - n 0 y y crys13yy 1 > outcrys13yy
+#./compspec - 100000 test13* crys13*
+#./testcrystal 1 4 0 200 - y 0 n test14n 1 > outtest14n
+#./testcrystal 1 4 0 200 - y 0 y test14y 1 > outtest14y
+#./testcrystal 1 4 0 200 - n 0 n n crys14nn 1 > outcrys14nn
+#./testcrystal 1 4 0 200 - n 0 n n crys14ny 1 > outcrys14ny
+#./testcrystal 1 4 0 200 - n 0 y n crys14yn 1 > outcrys14yn
+#./testcrystal 1 4 0 200 - n 0 y y crys14yy 1 > outcrys14yy
+#grep '[0-9] of ' outtest14* outcrys14*
+#./compspec - - test14* crys14*
+#./testcrystal 2 2 45 - 0 100 2000 y 0 n y testh22n 1 > outtesth22n
+#./testcrystal 2 2 45 - 0 100 2000 y 0 y y testh22y 1 > outtesth22y
+#./testcrystal 2 2 45 - 0 100 2000 n 0 n y crysh22n 1 > outcrysh22n
+#./testcrystal 2 2 45 - 0 100 2000 n 0 y y crysh22y 1 > outcrysh22y
+#./compspec - - testh22* crysh22*
+#./testcrystal 2 1 45 - 10 8 16 - - y n testsp21n 1 > outtestsp21n
+#./testcrystal 2 1 45 - 10 8 16 - - y y  testsp21y 1 > outtestsp21y
+#./testcrystal 2 1 45 - 10 8 16 - - n n  cryssp21n 1 > outcryssp21n
+#./testcrystal 2 1 45 - 10 8 16 - - n y cryssp21y 1 > outcryssp21y
+#./compspec - - testsp21* cryssp21*
+#./testcrystal 1 3 10 8 16 - - y 0 n testsp13n 1 > outtestsp13n
+#./testcrystal 1 3 10 8 16 - - y 0 y testsp13y 1 > outtestsp13y
+#./testcrystal 1 3 10 8 16 - - n 0 n n cryssp13nn 1 > outcryssp13nn
+#./testcrystal 1 3 10 8 16 - - n 0 y n cryssp13yn 1 > outcryssp13yn
+#./testcrystal 1 3 10 8 16 - - n 0 y y cryssp13yy 1 > outcryssp13yy
+#./compspec - - testsp13* cryssp13*
+#./testcrystal 1 3 10 8 16 - - y 50 testspcw13 1 > outtestspcw13
+#./testcrystal 1 3 10 8 16 - - n 50 y crysspcw13y 1 > outcrysspcw13y
+#./compspec - - testspcw13* crysspcw13*
+#./testcrystal 2 3 45 - 10 8 16 - - y 0 n testsp23n 1 > outtestsp23n
+#time ./testcrystal 2 3 45 - 10 8 16 - - y 0 y testsp23y 1 > outtestsp23y
+#./testcrystal 2 3 45 - 10 8 16 - - n 0 n n cryssp23nn 1 > outcryssp23nn
+#./testcrystal 2 3 45 - 10 8 16 - - n 0 y n cryssp23yn 1 > outcryssp23yn
+#time ./testcrystal 2 3 45 - 10 8 16 - - n 0 y y cryssp23yy 2 > outcryssp23yy
+#./compspec - - testsp23* cryssp23*
+#./testcrystal 1 2 0 100 - y 50 testcw12 1 > outtestcw12
+#./testcrystal 1 2 0 100 - n 50 cryscw12 1 > outcryscw12
+#./compspec - 100000 testcw12* cryscw12*
+#./testcrystal 1 3 0 100 - y 50 testcw13 1 > outtestcw13
+#./testcrystal 1 3 0 100 - n 50 y cryscw13y 1 > outcryscw13y
+#./testcrystal 1 3 0 100 - n 50 n cryscw13n 1 > outcryscw13n
+#./compspec - 100000 testcw13* cryscw13*
+#./testcrystal 1 4 0 100 - y 50 testcw14 1 > outtestcw14
+#./testcrystal 1 4 0 100 - n 50 y cryscw14y 1 > outcryscw14y
+#./testcrystal 1 4 0 100 - n 50 n cryscw14n 1 > outcryscw14n
+#./compspec - 100000 testcw14* cryscw14*
+#time ./testcrystal 2 3 45 - 0 100 - y 50 testcw23 0 > outtestcw23
+#time ./testcrystal 2 3 45 - 0 100 - n 50 y cryscw23y 0 > outcryscw23y
+#./testcrystal 2 3 45 - 0 100 - n 50 y cryscw23n 1 > outcryscw23n
+#./compspec - - testcw23* cryscw23*
+#time ./testcrystal 2 4 45 - 10 8 16 - - y 50 testcwsp24 0 > outtestcwsp24
+#time ./testcrystal 2 4 45 - 10 8 16 - - n 50 y cryscwsp24y 0 > outcryscwsp24y
+#time ./testcrystal 2 3 45 - 10 8 16 - - n 50 n cryscwsp23n 1 > outcryscwsp23n
+#./compspec - - testcwsp23* cryscwsp23*

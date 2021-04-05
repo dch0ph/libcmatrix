@@ -1,0 +1,230 @@
+#include "InversionGenerator.h"
+
+namespace libcmatrix {
+
+#include "lcm_BlockedOperator.hpp"
+
+std::ostream& operator<< (std::ostream& ostr, const InversionGenerator& a)
+{
+  return ostr << a.elements << '\n';
+}
+
+Warning<> InversionGenerator::nucleusnotfound_warning("Nucleus subject to RF not in blocking specification: ",&lcm_base_warning);
+
+complex cleanup(const complex& z) {
+  const double absre=::std::abs(z.real());
+  const double absim=::std::abs(z.imag());
+  if (absre>1e-10*absim)
+    return complex(z.real(),0.0);
+  if (absim>1e-10*absre)
+    return complex(0.0,z.imag());
+  return z;
+}
+
+void InversionGenerator::makeindex(BaseList<blkind_t> destindex, const BaseList< ListList<size_t> >& blocking)
+{
+  const size_t nstates=destindex.size();
+  for (size_t blk=blocking.size();blk--;) {
+    const BaseList<size_t> states(blocking(blk).row());
+    for (size_t i=states.size();i--;) {
+      const size_t curstate=states(i);
+      assert(curstate<nstates);
+      destindex(curstate)=blkind_t(blk,i);
+    }
+  }
+}
+
+void InversionGenerator::blockinglist(List<nuclei_spec>& useblocking, const BaseList<nuclei_spec>& blocking, nuclei_spec nucspec)
+{
+  bool found=false;
+
+  for (size_t i=0;i<blocking.size();i++) {
+    if (blocking(i)==nucspec)
+      found=true;
+    else
+      useblocking.push_back(blocking(i));
+  }
+  if (!found)
+    nucleusnotfound_warning.raise(nuctolabel(nucspec()),true);
+}
+
+void InversionGenerator::initialise(const PulseGenerator& pgen)
+{
+  const int verbose=opgen.verbose();
+  zshiftp.reset(new ZshiftCache(pgen.Fz()));
+  BlockedMatrix<complex> U180x;
+  pgen(U180x,M_PI,0.0);
+  if (verbose>1)
+    std::cout << "U180x:\n" << U180x << '\n';
+ 
+  const double tol=1e-2; //!< tolerance for non-zero elements
+
+  const SpinOpGeneratorBase& baseopgen(opgen);
+  nstates=baseopgen.size();
+  destindex.create(nstates);
+  makeindex(destindex,toblocking);
+  fromindex.create(nstates);
+  makeindex(fromindex,useopgenp->mzblocking());
+
+   size_t count=0;
+   elements.create(nstates,SparseEntry<complex>(0,complex(0.0)));
+   for (size_t blk=U180x.size();blk--;) {
+    Matrix<complex> curm(U180x(blk));
+    if (!curm)
+      continue;
+    if (!issquare(curm))
+      throw InternalError("InversionGenerator");
+    const BaseList<size_t> curindex(useopgenp->blockindices(blk));
+    const size_t n=curm.rows();
+    assert(n==curindex.size());
+    for (size_t r=n;r--;) {
+      bool foundnonzero=false;
+      size_t nonzeroindex;
+      const BaseList<complex> curr(curm.row(r));
+      for (size_t c=n;c--;) {
+	if (norm(curr(c))>tol) {
+	  if (foundnonzero)
+	    throw Failed("InversionGenerator: multiple non-zero elements found in inversion propagator");
+	  foundnonzero=true;
+	  nonzeroindex=c;
+	}
+      }
+      if (!foundnonzero)
+	throw Failed("InversionGenerator: failed to find non-zero element");
+      const complex z(cleanup(curr(nonzeroindex)));
+      SparseEntry<complex>& curentry(elements(curindex(nonzeroindex)));
+      assert(curentry.value==complex(0.0));
+      curentry=SparseEntry<complex>(curindex(r),z);
+      count++;
+    }
+   }
+   if (count!=nstates)
+     throw Mismatch("InversionGenerator: number of indexed states does not match size of space (MzSymmetry used?)",count,nstates);
+}
+
+void InversionGenerator::unitary_simtrans_ip(sparse_t& U, const ListList<complex>& zfacs) const
+{
+  if (U.size()!=zfacs.items())
+    throw Mismatch("InversionGenerator::unitary_simtrans_ip");
+  for (size_t c=U.size();c--;) {
+    sparse_t::value_type& Uel(U(c));    
+    const complex& cfac(zfacs(fromindex(c)));
+    const complex& rfac(zfacs(fromindex(Uel.index)));
+    Uel*=multiply_conj(rfac,cfac);
+  }
+}
+
+void InversionGenerator::operator()(BlockedOperator& sigmadest, const BlockedOperator& sigma, double phase) const
+ {
+  if (&sigmadest==&sigma)
+    throw ArgumentClash("InversionGenerator()");
+
+  const int verbose=opgen.verbose();
+   const sparse_t* usep=&elements;
+   if (phase) {
+     zfacs=(*zshiftp)(phase);
+     if (verbose)
+       std::cout << "z shifts: " << zfacs << '\n';
+     elementsz=elements;
+     unitary_simtrans_ip(elementsz,zfacs);
+     usep=&elementsz;
+     if (verbose)
+       std::cout << "Phase adjusted inversion matrix: " << (*usep) << '\n';
+   }
+  const block_pattern& blkspec(sigma.blockstructure());
+  const bool isherm=blkspec.isherm;
+  const bool ismatch=nucblockpattern.ismatching(blkspec); // this seems quite dodgy - doubt it will work with multiple blocked spins
+  const bool swapstructure=ismatch && !isherm;
+  const bool needconj=ismatch && isherm;
+  if (verbose>1) {
+    std::cout << "Need to invert block structure (RF irradiation on blocked spin + non-hermitian)? : " << (swapstructure ? "Yes\n" : "No\n");
+    std::cout << "Need additional conjugate (RF irradiation on blocked spin + hermitian)? : " << (needconj ? "Yes\n" : "No\n");
+  }
+  sigmadest.copy_props(sigma,swapstructure);
+  sigmadest.row().duplicate_structure(sigma.row());
+  sigmadest.row()=complex(1e30); //!< fill with junk
+  //iterate over source blocks 
+  typedef std::pair<size_t,size_t> rev_t;
+  List<rev_t> reverseeigSD(opgen.mzblocks(),rev_t(-1,-1));
+  size_t r,c;
+  bool ismiddle;
+  {
+    size_t mzeigSD=0;  
+    block_pattern::iterator mziter(sigmadest.blockstructure());
+    while (mziter.next(r,c,ismiddle)) {
+      reverseeigSD(r)=rev_t(mzeigSD,c);
+      mzeigSD++;
+    }
+  }
+  size_t mzeigSD=0;  
+  block_pattern::iterator mziter(blkspec);
+  doesconj_ip<complex> conjipobj;
+
+  const Indexer<2>& Hindexer(opgen.structure().indexer()); //!< indexer *for Hamiltonian*
+  while (mziter.next(r,c,ismiddle)) {
+    for (size_t blk=sigma.structure().eigblocks();blk--;) {
+      const cmatrix& sigmablk(sigma(mzeigSD,blk));
+      if (!sigmablk)
+	continue;
+      const BaseList<size_t> currindex(toblocking(Hindexer(r,blk)).row());
+      const BaseList<size_t> curcindex(toblocking(Hindexer(c,blk)).row());
+      size_t storedestr=-1;
+      size_t storedestc=-1;
+      size_t desteigSD=-1;
+      bool needdesteigSD=true; //could almost be outside eigenvalue loop
+      bool needswap=false;
+      for (size_t rr=sigmablk.rows();rr--;) {
+	const size_t bigr=currindex(rr);
+	// find element in V at column matching bigr
+	const SparseEntry<complex>& Vuse((*usep)(bigr));
+	const blkind_t& destr(destindex(Vuse.index));
+	for (size_t cc=sigmablk.cols();cc--;) {
+	  const size_t bigc=curcindex(cc);
+	  // find element in V' at column matching bigc
+	  const SparseEntry<complex>& VuseT((*usep)(bigc));
+	  complex newvalue=sigmablk(rr,cc);
+	  if (Vuse.value!=VuseT.value)
+	    newvalue*=multiply_conj(Vuse.value,VuseT.value);
+	  const blkind_t& destc(destindex(VuseT.index));
+	  if (needdesteigSD) {
+	    storedestr=destr.first;
+	    storedestc=destc.first;
+	    size_t nr,nblk,nc,nblk2;
+	    Hindexer.reverse(nr,nblk,destr.first); //!< get new row and eigblk (in H)
+	    Hindexer.reverse(nc,nblk2,destc.first); //!< get new col and eigblk (in H)
+	    if ((nblk!=nblk2) || (nblk!=blk))
+	      throw InternalError("InversionGenerator: mismatch of eigenvalue blocks");
+	    if (isherm && (nr>nc)) {
+	      std::swap(nr,nc);
+	      needswap=true;
+	    }
+	    const rev_t& revindex(reverseeigSD(nr));
+	    if (nc!=revindex.second)
+	      throw Failed("InversionGenerator: inversion outside of block structure");
+	    desteigSD=revindex.first;
+	    needdesteigSD=false;
+	  }
+	  else {
+	    if ((destr.first!=storedestr) || (destc.first!=storedestc))
+	      throw InternalError("InversionGenerator: not inverting to same block");
+	  }	  
+	  size_t dr=destr.second;
+	  size_t dc=destc.second;
+	  if (needswap) {
+	    std::swap(dr,dc);
+	    conjipobj(newvalue);
+	  }
+	  std::cout << newvalue << '\n';
+	  if (needconj)
+	    conjipobj(newvalue);
+	  if (verbose>1)
+	    std::cout << "Placing " << newvalue << " (from " << rr << ',' << cc << " of " << mzeigSD << ':' << blk << ") at " << dr << ',' << dc << " of block " << desteigSD << ':' << blk << '\n';
+	  sigmadest(desteigSD,blk)(dr,dc)=newvalue;
+	}
+      }
+    }
+    mzeigSD++;
+  }  
+ }
+
+} //namespace libcmatrix
