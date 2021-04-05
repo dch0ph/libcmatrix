@@ -21,6 +21,16 @@ rmatrix identity(int n)
   return d;
 }
 
+template<> bool tryspy_(const Matrix<double>& a, std::ostream& ostr, double tol) {
+  spy(ostr,a,tol);
+  return true;
+}
+
+template<> bool tryspy_(const Matrix<bool>& a, std::ostream& ostr, double) {
+  spy(ostr,a);
+  return true;
+}
+
 void spy(std::ostream& ostr,const BaseList<float_t>& a, double tol)
 { 
   checksnonzero_tolerance<double> nonzerocheck(tol);

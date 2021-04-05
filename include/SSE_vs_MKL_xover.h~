@@ -1,9 +1,0 @@
-/* Internal / external cross-overs created by testops 1000 */
-#define DMM 4
-#define ZMM 7
-#define ZTM 8
-#define ZMT 8
-#define DMLA 8
-#define ZMLA 26
-#define DMV 10
-#define ZMV 7

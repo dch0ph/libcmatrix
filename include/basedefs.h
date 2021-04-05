@@ -2031,14 +2031,8 @@ void spy(std::ostream&, const Matrix<bool>&);
 
 namespace {
   template<class T> bool tryspy_(const T&, std::ostream&, double) { return false; }
-  template<> bool tryspy_(const Matrix<double>& a, std::ostream& ostr, double tol) {
-    spy(ostr,a,tol);
-    return true;
-  }
-  template<> bool tryspy_(const Matrix<bool>& a, std::ostream& ostr, double) {
-    spy(ostr,a);
-    return true;
-  }
+  template<> bool tryspy_(const Matrix<double>&, std::ostream&, double tol);
+  template<> bool tryspy_(const Matrix<bool>&, std::ostream&, double);
 }
 
 template<class T> struct Print_<T,2> {
