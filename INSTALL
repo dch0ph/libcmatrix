@@ -1,11 +1,12 @@
 
-This release of libcmatrix is intended to work with any Unix-derived operating system and an ANSI C++ compiler.  g++ versions >=3.4 are strongly recommended.  libcmatrix does push C++ templates to their limit (though not beyond the ANSI standard).  Unfortunately some compilers don't cope well with this e.g. g++ V3.3 incorrectly reports a "ambiguous class template" error.
+libcmatrix should in principle work with any Unix-like environment and an ANSI C++ compiler.  
+It has only been thoroughly tested with GCC compilers and the configure script will almost
+certainly need tweaking for other compilers.  
 
-The configure script will almost certainly need tweaking for other compilers / Unices.  
 
 Windows:
 
-Compilation has most recently been tested for the Msys2 environment (win32 binaries). 
+Compilation has most recently been tested for the Msys2 environment (win64 binaries). 
 
 
 1. Configuration
@@ -13,46 +14,51 @@ Compilation has most recently been tested for the Msys2 environment (win32 binar
 will run the autoconf script which creates Makefile, config.h, Makefile_template and test/Makefile
 as a function of the system configuration.  Rather than tinker with the Makefiles produced, you should alter
 compiler flags etc. by passing environment variables to configure e.g.
- setenv CXXFLAGS -g +w2
-to set C++ compiler options (csh).  For the Bourne shell and variants use something like
 CXX=g++ CXXFLAGS="-g +w2" ./configure
+(bash and related shells)
   
 Recommended options (for optimisation):
 g++: -g -O3  [-W -Wno-sign-compare options are added automatically if gcc is being used ]
 
 Optional components:
 
-"--with-atlas" on the configure command line enables use of the ATLAS
+"--with-openblas" in the configure command line enables use of the OpenBLAS
 libraries for fast matrix multiplication etc. (recommended if, but only if,
-dealing with relatively large spin systems).  By default, ATLAS is included if
-it can found.  Use "--without-atlas" to explicitly disable ATLAS.
+dealing with relatively large spin systems). OpenBLAS seems to work out of the
+box easily (unlike ATLAS - the previously used external library).
 
-The location of the header and library files must be set in these are not already in the compile/link path e.g.
+The location of the header and library files must be set if these are not already in the compile/link path e.g.
+CPPFLAGS="-I<dir>/include" LDFLAGS="-L<dir>/lib" ./configure
 
-CPPFLAGS="-I<atlasdir>/include" LDFLAGS="-L<atlasdir>/lib/<arch>" ./configure
+If the library has been compiled with an external library, then all programs 
+that use the library must be compiled these options.
 
-where <atlasdir> is the location of the ATLAS root directory and
-<arch> is the "architecture" for which ATLAS has been configured.
-If the library has been compiled with ATLAS, then all programs 
-that use the library must be compiled with ATLAS.
-
+"--with-atlas" enables use of the ATLAS libraries for fast matrix multiplication etc. 
+This quite challenging to compile and is no longer recommended.
 
 "--with-acml" "--with-mkl"  ACML and Intel MKL an alternative to ATLAS for AMD- and Intel- based processors respectively.
-Same considerations as --with-atlas (except it is not enabled by default)
+Same considerations as --with-openblas
 
 
 "--with-threads" enables use of multi-threading.  A special version 
 of library libcmatrix_r.a must be compiled, together with appropriate
 options when compiling (see Makefile_template).  NB. Multi-threading
 is not being actively developed/verified.  MPI (see below) is
-a simpler option in most cases.
+a simpler option in most cases. This is not compatible with Windows
+and is not recommended.
 
 "--with-MPI" enables use of the Message Passing Interface (MPI).
 mpi.h and -lmpi must be accessible for this to work.
 
-"--with-minuit" enables Minuit support.  If --with or --without is not set explicitly, it is automatically included if the appropriate files are found. 
+"--with-minuit" enables Minuit support for more complex optimisation. 
+If --with or --without is not set explicitly, it is automatically included if the appropriate files are found. 
+The configuration script checks for the current API (Minuit2). It no longer works with the older C++ Minuit API if found.
 
-The configuration script first checks for the current API (Minuit2) but will work with the older C++ Minuit API if found.
+Note that Minuit is now quite hard to find. See below for some compilation tips. Recommend to try working without Minuit first.
+
+"--with-sse" enables the use of SSE instructions to speed up complex arithmetric by a factor of ~2. This introduces more
+home-brewed code, but has been used now without problems for many years. The SSE instructions are specific to Intel-type
+processors. 
 
 Check the configuration options in config.h but be sure you know what you are doing before changing anything!
 
@@ -61,12 +67,12 @@ Note that you can recreate the Makefile's etc. after edits of say config.h witho
 2. make lib/libmatrix.a 
 will create the libcmatrix.a library.
 
-or use make all to make all versions of the library e.g. libcmatrix_r.a variant which should be used for multi-threading programs.  Other variants exist for debugging (-g) and profiling (-pg).  
+Other variants exist for debugging (-g) and profiling (-pg).  
 
 
 If only compiling libcmatrix for linking with other programs such as pNMRsim, stop here.
 
-No install script is currently supplied since libcmatrix is often only temporarily required for pNMRsim compilation.  If preferred, however, the contents of lib and include can be installed in say /usr/local and /usr/local/include/libcmatrix respectively.
+There is no install script since libcmatrix is often only temporarily required for pNMRsim compilation.  If preferred, however, the contents of lib and include can be installed in say /usr/local and /usr/local/include/libcmatrix respectively.
 
 
 3. Testing
@@ -80,10 +86,42 @@ options have been selected.  The "testops" programs determines
 the floating point "throughput" (in megaflops/s) of various
 operations as a function of matrix size.  The peak performance
 should be of the same order as the CPU clock speed.
+Note that for every operation that uses the external libtaries, there is a "cross-over" point,
+with the external libtary only being used for larger matrices / vectors. testops can be used
+to search for these cross-over points, which will be architecture dependent. The fact that 
+external libraries are only effective in some cases is a motivation for avoiding them if
+not needed!
 
 
 4. Read the documentation in docs!
 
 paul.hodgkinson@durham.ac.uk
+
+
+Note on installing Minuit2
+
+Standalone version of Minuit2 obtained from here: 
+
+https://github.com/GooFit/Minuit2 
+
+ 
+Unzip into Minuit2-master 
+mkdir build 
+
+Inside build: 
+
+cmake ..  
+to create Makefiles 
+
+Had to edit CMakeLists.txt to add 
+
+link_libraries("-lstdc++") 
+
+to get C++ programs to link properly 
+
+make install 
+
+Install the header files and library. 
+
 
 
