@@ -154,10 +154,11 @@ void DynamicPhase::tensor(const space_T& A)
   for (int l=0;l<=ran;l++) {
     if (A.have_rank(l)) {
       if (l & 1)
-	throw Failed("DynamicPhase::tensor");
+		throw Failed("DynamicPhase::tensor");
       else
-	B0+=dvals(l,0)*real(A(l,0));
-	for (int m=1;m<=l;m++) mla(Bvalues(m-1),dvals(l,m),A(l,m));
+		B0+=dvals(l,0)*real(A(l,0));
+	  for (int m=1;m<=l;m++)
+		mla(Bvalues(m-1),dvals(l,m),A(l,m));
     }
   }
   update_tensor();

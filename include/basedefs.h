@@ -248,7 +248,7 @@ template<class T1, class T2> struct _bz_promote2<T1,T2,0> { typedef T2 value_typ
 #define LCM_NEWTYPE(T1,T2,autopro) typename promote_trait< T1,T2,autopro >::value_type
  
  //Pinched from Loki / Modern C++ Design
- template<int> struct CompileTimeError;
+ template<bool> struct CompileTimeError;
  template<> struct CompileTimeError<true> {};
 #define LCM_STATIC_CHECK(expr, msg) \
    { libcmatrix::CompileTimeError<((expr) != 0)> Error_##msg; (void)Error_##msg; }
@@ -2029,11 +2029,11 @@ void spy(std::ostream&, const Matrix<double>&, double =1e-10);
 void spy(std::ostream&, const Matrix<complex>&, double =1e-10);
 void spy(std::ostream&, const Matrix<bool>&);
 
-namespace {
-  template<class T> bool tryspy_(const T&, std::ostream&, double) { return false; }
-  template<> bool tryspy_(const Matrix<double>&, std::ostream&, double tol);
-  template<> bool tryspy_(const Matrix<bool>&, std::ostream&, double);
-}
+
+template<class T> bool tryspy_(const T&, std::ostream&, double) { return false; }
+template<> bool tryspy_(const Matrix<double>&, std::ostream&, double tol);
+template<> bool tryspy_(const Matrix<bool>&, std::ostream&, double);
+
 
 template<class T> struct Print_<T,2> {
 

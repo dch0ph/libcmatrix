@@ -19,11 +19,11 @@ namespace libcmatrix {
       float operator()(double v) const { return v; }
     };
     
-    int pad(int nbytes)
-    {
-      const int left= nbytes & 7;
-      return left ? nbytes+8-left : nbytes;
-    }
+    //int pad(int nbytes)
+    //{
+    //  const int left= nbytes & 7;
+    //  return left ? nbytes+8-left : nbytes;
+    //}
     
     char errorbuf[256]; //!< scratch space for errors
 
