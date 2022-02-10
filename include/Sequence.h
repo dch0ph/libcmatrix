@@ -49,7 +49,7 @@ namespace libcmatrix {
 //     static const bool timedependent=false;
 //   };
 
-  template<class Sys> class BaseSequencePropagator;
+  template<class Sys> struct BaseSequencePropagator;
 
   struct sequence_state {
     enum { FINISHED, INACTIVE, ACTIVE, TRANSIENT };

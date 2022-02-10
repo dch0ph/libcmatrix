@@ -1007,7 +1007,7 @@ template<> struct iters3_< ::std::random_access_iterator_tag,::std::random_acces
     }
   }
 
-  template<class Iter_d, class Iter_a, class Iter_b,class Function> static inline void apply_ip2(Function mop,Iter_d __restrict__ dstart, const Iter_d& __restrict__ dend,Iter_a __restrict__ astart, Iter_b __restrict__ bstart)
+  template<class Iter_d, class Iter_a, class Iter_b,class Function> static inline void apply_ip2(Function mop,Iter_d LCM_RESTRICT dstart, const Iter_d& LCM_RESTRICT dend,Iter_a LCM_RESTRICT astart, Iter_b LCM_RESTRICT bstart)
   {
     const ptrdiff_t n=dend-dstart; //must assume that ptrdiff_t is a simple type
     switch (n & 3) {

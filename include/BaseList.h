@@ -261,7 +261,8 @@ template<size_t n,class T> class ExplicitList : public BaseList<T> {
   char stat[n*sizeof(T)];
   typedef memop<T,type_traits<T>::trivialconstructor> memop_t;
 public:
-  template<class T2> ExplicitList(const T2& v0, ... )
+// changed from const T2& v0 (undefined behaviour) for va_args with references
+  template<class T2> ExplicitList(T2 v0, ... )
     : BaseList<T>(n,(T*)(stat)) {
     T* tstat=BaseList<T>::vector();
     new (tstat++) T(v0);
