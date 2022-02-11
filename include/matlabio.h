@@ -84,6 +84,8 @@ namespace libcmatrix {
     mxSINGLE_CLASS=7,
     mxINT8_CLASS=8,
     mxUINT8_CLASS=9,
+	mxINT16_CLASS=10,
+	mxUINT16_CLASS=11,
     mxINT32_CLASS=12,
     mxUINT32_CLASS=13,
     mxINT64_CLASS=14,
@@ -133,6 +135,10 @@ namespace libcmatrix {
     static const matlab_class_t dclass=mxINT8_CLASS;
     static const matlab_element_t dtype=miINT8;
   };
+  template<> struct matlab_traits<int16_t> {
+    static const matlab_class_t dclass=mxINT16_CLASS;
+    static const matlab_element_t dtype=miINT16;
+  };
   template<> struct matlab_traits<int32_t> {
     static const matlab_class_t dclass=mxINT32_CLASS;
     static const matlab_element_t dtype=miINT32;
@@ -140,6 +146,10 @@ namespace libcmatrix {
   template<> struct matlab_traits<UINT8_t> {
     static const matlab_class_t dclass=mxUINT8_CLASS;
     static const matlab_element_t dtype=miUINT8;
+  };
+  template<> struct matlab_traits<UINT16_t> {
+    static const matlab_class_t dclass=mxUINT16_CLASS;
+    static const matlab_element_t dtype=miUINT16;
   };
   template<> struct matlab_traits<UINT32_t> {
     static const matlab_class_t dclass=mxUINT32_CLASS;
