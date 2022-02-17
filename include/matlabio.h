@@ -166,6 +166,14 @@ namespace libcmatrix {
     static const matlab_element_t dtype=miUINT64;
   };
 #endif
+// workaround for MacOS using a distinct type for size_t
+// This is a bodge since it assumes that size_t is 8 bytes
+#ifdef LCM_MACOS_SIZET_BODGE
+  template<> struct matlab_traits<size_t> {
+    static const matlab_class_t dclass=mxUINT64_CLASS;
+    static const matlab_element_t dtype=miUINT64;
+  };
+#endif
 
   template<class T> void ReadMATLAB4(Matrix<T>&, FILE*);
   template<class T> void ReadMATLAB4(List<T>&, FILE*);

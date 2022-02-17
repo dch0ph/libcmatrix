@@ -11,7 +11,10 @@ namespace libcmatrix {
 //Uncomment to enable generic periodic symmetry code */
 //#define LCM_ENABLE_GENERICPERIODIC
 
-//Uncomment to enable experimental C++11 features
+//Uncomment to enable a bodge for MacOS, see matlabio.h (not yet auto-detected)
+//#define LCM_MACOS_SIZET_BODGE
+
+//Comment out to disable use of some C++11 features
 #define LCM_USE_CXX11
 
   // Allow tweaking of individual features 
