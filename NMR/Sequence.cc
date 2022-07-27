@@ -1354,7 +1354,7 @@ void BaseSequencePropagator_::prop_U_(BlockedMatrix<complex>& U, double t1, doub
 	prettyprint_time(nextev) << '\n';
       }
       evp->apply_end(U,mutable_this->Hcur,which);
-      if ((channels==1) && (fabs(real(Hcur.row().front()))<1e-6)) 
+      if ((channels==1) && !!Hcur && (fabs(real(Hcur.row().front()))<1e-6))
 	mutable_this->Hcur.clear(); //if only channel and no offset can simply delete Hrf
       if (evp->needs_correct())
 	mutable_this->offreslev--;

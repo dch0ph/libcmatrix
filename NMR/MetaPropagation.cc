@@ -3365,13 +3365,22 @@ template void BaseMetaPropagator::step_propagator(BlockedMatrix<complex>&, const
       const double nextt=(j==n-1) ? t2 : t1+(j+1)*dt;
       (*this)(j ? tmp : Us.front(),t,nextt,mzeig,blk); //intdt,Bool2Type<Ham_traits<HType>::isconstant>());
       if (j) {
-	if (!tmp)
-	  Us(j)=Us(j-1);
-	else
-	  multiply(Us(j),tmp,Us(j-1));
+		if (!tmp)
+			Us(j)=Us(j-1);
+		else {
+			if (!Us(j-1))
+				Us(j)=tmp;
+			else
+				multiply(Us(j),tmp,Us(j-1));
+		}
       }
       t=nextt;
     }
+	// difficult to work with undefined propagators. Expand to identity at this point.
+	for (size_t j=n;j--;) {
+		if (!Us(j))
+			Us(j).identity(opgen_base_.size(mzeig, blk));
+	}
   }
   
   void BaseMetaPropagator::ensure(BlockedMatrix<complex>& U) const

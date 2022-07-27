@@ -730,6 +730,7 @@ template<class T> void spy(std::ostream& ostr,const MultiMatrix<T,4>& a,double t
     }
   };
   //special case for copying List<Matrix> into MultiMatrix<3>
+  //Poor because assumes that input list is regular
   template<> struct Make_<3,1> {
     template<typename T1> static inline void assign(MultiMatrix<T1,3>& a,const BaseList< Matrix<T1> >& v) {
       size_t n=v.size();
