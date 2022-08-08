@@ -11,7 +11,7 @@
 
 namespace libcmatrix {
 
-static char errmesg[LINE_MAXLEN];
+static char errmesg[LINE_MAXLEN+80];
 
 inline void parse(double& v,const char *val,size_t lineno)
 {
@@ -37,12 +37,12 @@ void read_simpson(List<complex>& a,simpsonFD& fd,FILE *fp)
   size_t lineno=1;
 
   if (!fgets(buf,sizeof(buf),fp)) {
-    LCM_SNPRINTF(errmesg,sizeof(errmesg),"read_simpson: unable to read line %i",(int)lineno);
+    snprintf(errmesg,sizeof(errmesg),"read_simpson: unable to read line %i",(int)lineno);
     throw Failed(errmesg);
   }
   striptrail(buf);
   if (strcmp(buf,"SIMP")!=0) { //don't check for newline (may be DOS)
-    LCM_SNPRINTF(errmesg,sizeof(errmesg),"read_simpson: invalid file type: %s",buf);
+    snprintf(errmesg,sizeof(errmesg),"read_simpson: invalid file type: %s",buf);
     throw Failed(errmesg);
   }
 
@@ -149,8 +149,8 @@ void read_simpson(List<complex>& a,simpsonFD& fd,FILE *fp)
 	a(i)=complex(re,im);
       }
       if (!fscanf(fp,"%s",buf) || strcmp(buf,"END")) {
-	LCM_SNPRINTF(errmesg,sizeof(errmesg),"read_simpson: data section finishes with '%s' not END at line %i",buf,(int)lineno);
-	throw Failed(errmesg);
+	      snprintf(errmesg,sizeof(errmesg),"read_simpson: data section finishes with '%s' not END at line %i",buf,(int)lineno);
+	      throw Failed(errmesg);
       }
       got_data=true;
     }

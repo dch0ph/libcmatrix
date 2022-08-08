@@ -377,7 +377,7 @@ namespace libcmatrix {
     return isunitary_(U,name);
   }
 
-  char stabfacchar[10];
+  char stabfacchar[12];
 
   template<class T> void chebyshev_propagator_(cmatrix& U, const Matrix<T>& H, double dt, const matrix_partition* partp)//, bool acc =true)
   {
@@ -396,7 +396,7 @@ namespace libcmatrix {
 	std::cout << "Stability factor: " << stabfac << '\n';
       }
       if (stabfac>1.0) {
-	snprintf(stabfacchar,sizeof(stabfacchar)-1,"%.2g\n",stabfac);
+	snprintf(stabfacchar,sizeof(stabfacchar),"%.2g\n",stabfac);
 	if (cmatrix_eigensystem_controller.throwexception)
 	  chebyshev_convergence_warning.raiseas(BaseWarning::RaiseException,stabfacchar);
 	else

@@ -195,8 +195,8 @@ static bool scanfloat(double& dest, FILE* fp)
   char* tail;
   dest=strtod(buf,&tail);
   if (tail && *tail) {
-    char message[60];
-    snprintf(message,sizeof(message),"Failed to parse %s as floating point number",buf);
+    char message[75];
+    snprintf(message,sizeof(message)-1,"Failed to parse %s as floating point number", buf);
     throw Failed(message);
   }
   return true;
