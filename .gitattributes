@@ -1,2 +1,6 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Perform LF normalization
+# All compliation will done in Linux even if downloaded to Windows filespace
+* text eol=lf
+
+*.pdf binary
+
