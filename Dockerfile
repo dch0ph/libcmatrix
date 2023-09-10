@@ -6,11 +6,10 @@ RUN DEBIAN_FRONTEND=noninteractive \
 
 WORKDIR /libcmatrix
 
-COPY src/ ./src/
-COPY include/ ./include/
-
+COPY . .
 
 #RUN CXX=g++ CXXFLAGS="-O3" ./configure --with-openblas --with-sse --with-MPI
 #RUN make lib/libcmatrix.a
 
 # docker build . -t libcmatrix
+# docker run -it --name libcmatrix libcmatrix

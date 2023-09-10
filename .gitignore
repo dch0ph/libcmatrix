@@ -44,5 +44,6 @@ autom4te.cache
 Makefile
 Makefile_template
 test/Makefile
+include/config.h
 
 .vscode/
