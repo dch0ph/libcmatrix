@@ -39,7 +39,11 @@ extern "C" {
 #ifdef HAVE_CBLAS_H
 #include "cblas.h"
 #else
+#ifdef HAVE_CBLAS64_H
+#include "cblas64.h"
+#else
 #include "OpenBLAS/cblas.h"
+#endif
 #endif
 #else
 #define LCM_EXTERNAL_NAME ATLAS

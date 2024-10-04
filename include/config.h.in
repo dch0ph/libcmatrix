@@ -141,7 +141,10 @@ but at cost of bulky code */
 
 /* Define if cblas.h is in top level directory (doesn't need OpenBLAS qualifier) */
 #undef HAVE_CBLAS_H
-  
+ 
+/* Define if cblas64.h being used */
+#undef HAVE_CBLAS64_H
+
 //Cross-over values for external algorithms
 
 #ifndef LCM_INTERNAL_ZMM

@@ -29,7 +29,7 @@ Is LDFLAGS is defined to include relevant directory?]))
 fi
 
 AC_ARG_WITH(mkl,
-	AS_HELP_STRING([--with-mkl],[use the Intel MKL library (default-use if found)]),,with_mkl=check)
+	AS_HELP_STRING([--with-mkl],[use the Intel MKL library (default-use no)]),,with_mkl=no)
 if test x$with_mkl != xno; then
 	FOUNDMKL=yes
 	AC_CHECK_HEADERS(mkl_cblas.h,,FOUNDMKL=no
@@ -49,14 +49,15 @@ AC_ARG_WITH(openblas,
 	AS_HELP_STRING([--with-openblas],[use the OpenBLAS library (default-use if found)]),,with_openblas=check)
 if test x$with_openblas != xno; then
 	FOUNDOPENBLAS=yes
-	AC_CHECK_HEADERS([cblas.h OpenBLAS/cblas.h],break,FOUNDOPENBLAS=no
-		AC_MSG_WARN([cblas.h header file needed by OpenBLAS not found
+	AC_CHECK_HEADERS([cblas64.h cblas.h OpenBLAS/cblas.h],break,FOUNDOPENBLAS=no
+		AC_MSG_WARN([cblas64.h/cblas.h header file needed by OpenBLAS not found
 Is CCPFLAGS defined to include relevant directory?]))
-	AC_CHECK_LIB(openblas,main,,FOUNDOPENBLAS=no
-		AC_MSG_WARN([OpenBLAS library (libopenblas.a) not found
+	AC_CHECK_LIB(openblas64,main,,FOUNDOPENBLAS=no
+		AC_MSG_WARN([OpenBLAS library (libopenblas64.a) not found
 Is LDFLAGS is defined to include relevant directory?]))
 	if test x$FOUNDOPENBLAS = xyes; then
 		CXXFLAGS="$CXXFLAGS -DLCM_USE_EXTERNAL"
+		AC_DEFINE(HAVE_LIBOPENBLAS)
 	else
 		if test x$with_openblas = xyes; then
 			AC_MSG_FAILURE([--with-openblas was given, but OpenBLAS tests failed])
