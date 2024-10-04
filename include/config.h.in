@@ -152,7 +152,11 @@ but at cost of bulky code */
 #ifdef HAVE_LIBMKL
 #include "SSE_vs_MKL_xover.h"
 #else
+#ifdef HAVE_ATLAS
 #include "SSE_vs_ATLAS_xover.h"
+#else
+#include "SSE_vs_OpenBLAS64.h"
+#endif
 #endif
 #else
 #ifdef HAVE_LIBMKL
