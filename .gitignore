@@ -39,9 +39,9 @@ autom4te.cache
 /aclocal.m4
 /compile
 /config.guess
-/config.h.in
+include/config.h
 /config.log
-/config.status
+config.status
 /config.sub
 /configure
 /configure.scan
