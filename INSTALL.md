@@ -57,48 +57,29 @@ There is no install script since libcmatrix is often only temporarily required f
 `make all` in the `test` subdirectory will create a set of test programs.
 These are mostly demonstrations of different aspects of the library rather than real stress tests.  Many programs require input; comments in the .cc files should give suitable values.  Don't worry if not all the programs compile - the libcmatrix API currently evolves for best interaction with pNMRsim and so the "standalone" interface is not so well defined.
 
-It is a good idea to check the performance of key operations
-such a matrix multiplication to ensure that appropriate "tuning"
-options have been selected.  The `testops` programs determines
-the floating point "throughput" (in megaflops/s) of various
-operations as a function of matrix size.  The peak performance
-should be of the same order as the CPU clock speed.
+**Optimisation**: If peak performance is important, the performance of key operations
+such a matrix multiplication can be checked to ensure that appropriate "tuning"
+options have been selected.  The `testops` programs determines the floating point "throughput" (in megaflops/s) of various
+operations as a function of matrix size.  The peak performance should be of the same order as the CPU clock speed.
 Note that for every operation that uses the external libtaries, there is a "cross-over" point,
 with the external libtary only being used for larger matrices / vectors. `testops` can be used
 to search for these cross-over points, which will be architecture dependent. The fact that 
-external libraries are only effective in some cases is a motivation for avoiding them if
-not needed!
+external libraries are only effective in some cases is a motivation for avoiding them if not needed!
 
 
-5. Read the documentation in docs!
 
-paul.hodgkinson@durham.ac.uk
+## Note on installing Minuit2
 
-
-Note on installing Minuit2
-
-Standalone version of Minuit2 obtained from here: 
-
-https://github.com/GooFit/Minuit2 
-
+A standalone version of Minuit2 can be found [here](https://github.com/GooFit/Minuit2). The `cmake` build system is required (`apt-get install cmake` on Ubuntu). 
  
-Unzip into Minuit2-master 
+Unzip into `Minuit2-master`. Had to edit `CMakeLists.txt` to add 
+`link_libraries("-lstdc++")` 
+to get C++ programs to link properly .
+
+```
 mkdir build 
-
-Inside build: 
-
+cd build
 cmake ..  
-to create Makefiles 
+```
 
-Had to edit CMakeLists.txt to add 
-
-link_libraries("-lstdc++") 
-
-to get C++ programs to link properly 
-
-make install 
-
-Install the header files and library. 
-
-
-
+The compiled libraries and headers can be installed, but it may be simpler just to add the relevant directories (`lib` and `inc` respectively) to the paths when compiling `libcmatrix`, `pNMRsim` etc.
