@@ -28,7 +28,7 @@ LINK= $(CXX) $(CXXFLAGS) $(LDFLAGS)
 
 .KEEP_STATE:
 
-PROGRAMS= timetrial test180special timetriall testhomo testsequence testiter testfunct testinhomo testeig testpowder testops testsimplex testfit testblock teststatic testreal testmatlab testpart testirred testlineshape testlineshape2D testinterp testsimpson testmeta testquad testlistlist testphasemod testfacet
+PROGRAMS= timetrial test180special timetriall testhomo testsequence testiter testfunct testinhomo testeig testpowder testops testsimplex testfit testblock teststatic testreal testmatlab testpart testirred testlineshape testlineshape2D testinterp testsimpson testmeta testquad testlistlist testphasemod testfacet testcomplex
 
 TPROGRAMS=$(PROGRAMS:%=%)
 
