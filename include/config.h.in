@@ -160,9 +160,13 @@ but at cost of bulky code */
 #endif
 #else
 #ifdef HAVE_LIBMKL
-#error "Illogical combination of using MKL library without SSE optimisation"
+#error "Untested combination of using MKL library without SSE optimisation"
 #else 
-#include "ATLAS_xover.h"
+#ifdef HAVE_LIBOPENBLAS
+#include "nosse_vs_OpenBLAS64_xover.h"
+#else
+#include "msys2_xover.h"
+#endif
 #endif
 #endif
 #endif
