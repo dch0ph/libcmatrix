@@ -3,12 +3,13 @@ UNSAFELIBS=
 AC_ARG_WITH(minuit,
 	AS_HELP_STRING([--with-minuit],[enable Minuit support (default-use if found)]),,with_minuit=check)
 
-MINUITVER="2"
+MINUITVER=2
 if test x$with_minuit != xno; then
 	FOUNDMINUIT=yes
 	AC_CHECK_HEADERS(Minuit2/FCNBase.h,AC_DEFINE(MINUITVER,2),FOUNDMINUIT=no)
 	if test x$FOUNDMINUIT = xno; then
-		AC_CHECK_HEADERS(Minuit/FCNBase.h,AC_DEFINE(MINUITVER,1)
+		AC_CHECK_HEADERS(Minuit/FCNBase.h,MINUITVER=X
+			AC_DEFINE(MINUITVER,1)
 			FOUNDMINUIT=yes,AC_MSG_WARN([Minuit header files (Minuit/FCNBase.h) not found
 Is CPPFLAGS is defined to include relevant directory?]))
 	fi
