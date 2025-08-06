@@ -40,11 +40,7 @@
 #define LCM_ENUM_CAST(X) int(X)
 #define LCM_ITER_CAT(X) typename ::std::iterator_traits< X >::iterator_category
 
-#ifdef LCM_USE_NULLPTR
 #define LCM_NULL nullptr
-#else
-#define LCM_NULL NULL
-#endif
 
 namespace libcmatrix {
 
@@ -525,7 +521,7 @@ template<class T1,class T2> inline bool issame(const T1& a,const T2& b) {
 
     static T* get_uninit(size_t n) { 
       //claimed_+=((n*sizeof(T))>>2);
-      return n ? static_cast<T*>(alloc_t::allocate(n*sizeof(T))) : (T*)NULL;
+      return n ? static_cast<T*>(alloc_t::allocate(n*sizeof(T))) : nullptr;
     } 
       static void release_uninit(T* p, size_t n) {
 	//	released_+=((n*sizeof(T))>>2);
@@ -644,7 +640,7 @@ template<class T1,class T2> inline bool issame(const T1& a,const T2& b) {
 
     static T* get_uninit(size_t n) { 
       //      claimed_+=((n*sizeof(T))>>2);
-      return n ? static_cast<T*>(alloc_t::allocate(n*sizeof(T))) : (T*)NULL; 
+      return n ? static_cast<T*>(alloc_t::allocate(n*sizeof(T))) : nullptr; 
     } 
       static void release_uninit(T* p, size_t n) {
 	//	released_+=((n*sizeof(T))>>2);

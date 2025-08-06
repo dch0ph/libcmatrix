@@ -18,9 +18,6 @@ namespace libcmatrix {
 // Note, however, that this means that bounds checking will only be enabled when linking against debugging version of library
 //#define LCM_USE_EXTERNTEMPLATE
 
-// Use C++11 nullptr
-#define LCM_USE_NULLPTR
-
 // Default size for scratch lists; too big and memory will be wasted, too small and new operations won't be avoided
 //Set to zero to disable "dirty" static allocation by ScratchList (slower but safer)
 #ifndef SCRATCH_SIZE
