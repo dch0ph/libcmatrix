@@ -79,9 +79,7 @@ public:
   inline void push_back(const T& val =T()) { push_back_(val,Int2Type<0>()); }
   inline void pop_back();
 
-#ifdef LCM_USE_CXX11
   template<typename... Args_> void emplace_back(Args_&&...);
-#endif
 
   //back comes from BaseList
 
@@ -417,17 +415,14 @@ template<typename T> void List<T>::push_back_(const T& a, Int2Type<0>)
     nitems++;
   }
 
-#ifdef LCM_USE_CXX11
- template<typename T> template<typename... Args_> void List<T>::emplace_back(Args_&&... args_)
-   {
+template<typename T> template<typename... Args_> void List<T>::emplace_back(Args_&&... args_)
+  {
     if (nitems==allocitems)
       //extension will fail if memory is static
       reserve((allocitems>8) ? size_t(LCM_EXTEND_STACK*allocitems) : LCM_DEFAULT_STACK);
     alloc_t::memop_t::construct(datast[nitems], std::forward<Args_>(args_)...);
     nitems++;
   }
-
-#endif
 
 template<typename T> template<typename T2> void List<T>::push_back_(const T2& a, Int2Type<1>)
 {

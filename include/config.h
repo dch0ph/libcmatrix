@@ -12,7 +12,10 @@ namespace libcmatrix {
 //Uncomment to enable generic periodic symmetry code */
 //#define LCM_ENABLE_GENERICPERIODIC
 
-//Uncomment to enable experimental C++11 features
+//Uncomment to enable a bodge for MacOS, see matlabio.h (not yet auto-detected)
+//#define LCM_MACOS_SIZET_BODGE
+
+//Comment out to disable use of some C++11 features
 #define LCM_USE_CXX11
 
   // Allow tweaking of individual features 
@@ -138,8 +141,11 @@ but at cost of bulky code */
 #define HAVE_LIBOPENBLAS 1
 
 /* Define if cblas.h is in top level directory (doesn't need OpenBLAS qualifier) */
-#define HAVE_CBLAS_H 1
-  
+/* #undef HAVE_CBLAS_H */
+ 
+/* Define if cblas64.h being used */
+#define HAVE_CBLAS64_H 1
+
 //Cross-over values for external algorithms
 
 #ifndef LCM_INTERNAL_ZMM
@@ -147,13 +153,21 @@ but at cost of bulky code */
 #ifdef HAVE_LIBMKL
 #include "SSE_vs_MKL_xover.h"
 #else
+#ifdef HAVE_ATLAS
 #include "SSE_vs_ATLAS_xover.h"
+#else
+#include "SSE_vs_OpenBLAS64.h"
+#endif
 #endif
 #else
 #ifdef HAVE_LIBMKL
-#error "Illogical combination of using MKL library without SSE optimisation"
+#error "Untested combination of using MKL library without SSE optimisation"
 #else 
-#include "ATLAS_xover.h"
+#ifdef HAVE_LIBOPENBLAS
+#include "nosse_vs_OpenBLAS64_xover.h"
+#else
+#include "msys2_xover.h"
+#endif
 #endif
 #endif
 #endif
@@ -245,8 +259,8 @@ but at cost of bulky code */
 /* Allow HAVE_LIBMINUIT to be over-written */
 #ifndef HAVE_LIBMINUIT
 /* Define if you enabling Minuit */
-/* #undef HAVE_LIBMINUIT */
-/* #undef MINUITVER */
+#define HAVE_LIBMINUIT 1
+#define MINUITVER 2
 #endif
 
 /* Define if unsigned int types are u_intXX_t rather than uintXX_t. */

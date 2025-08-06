@@ -14,17 +14,12 @@ namespace libcmatrix {
 //Uncomment to enable a bodge for MacOS, see matlabio.h (not yet auto-detected)
 //#define LCM_MACOS_SIZET_BODGE
 
-//Comment out to disable use of some C++11 features
-#define LCM_USE_CXX11
-
-  // Allow tweaking of individual features 
-#ifdef LCM_USE_CXX11
-  // Use extern template feature of C++11 to avoid multiple template instantiation
-  // Note, however, that this means that bounds checking will only be enabled when linking against debugging version of library
+// Use extern template feature of C++11 to avoid multiple template instantiation
+// Note, however, that this means that bounds checking will only be enabled when linking against debugging version of library
 //#define LCM_USE_EXTERNTEMPLATE
-  // Use C++11 nullptr
+
+// Use C++11 nullptr
 #define LCM_USE_NULLPTR
-#endif
 
 // Default size for scratch lists; too big and memory will be wasted, too small and new operations won't be avoided
 //Set to zero to disable "dirty" static allocation by ScratchList (slower but safer)
