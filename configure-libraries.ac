@@ -14,7 +14,7 @@ if test x$with_minuit != xno; then
 Is CPPFLAGS is defined to include relevant directory?]))
 	fi
 	if test x$FOUNDMINUIT = xyes; then
-		AC_SEARCH_LIBS([main], [Minuit2, lcg_Minuit, Minuit],,FOUNDMINUIT=no
+		AC_SEARCH_LIBS([main], [Minuit2 lcg_Minuit Minuit],,FOUNDMINUIT=no
 				AC_MSG_WARN([Minuit library (libMinuit2, liblcg_Minuit or libMinuit) not found
 Is LDFLAGS is defined to include relevant directory?]))
 		if test x$FOUNDMINUIT = xyes; then
@@ -49,19 +49,23 @@ fi
 AC_ARG_WITH(openblas,
 	AS_HELP_STRING([--with-openblas],[use the OpenBLAS library (default-use if found)]),,with_openblas=check)
 if test x$with_openblas != xno; then
-	FOUNDOPENBLAS=yes
-	AC_CHECK_HEADERS([cblas64.h cblas.h OpenBLAS/cblas.h],break,FOUNDOPENBLAS=no
+	FOUNDOPENBLAS=no
+	AC_CHECK_HEADERS([cblas64.h cblas.h OpenBLAS/cblas.h],FOUNDOPENBLAS=yes)
+	if test x$FOUNDOPENBLAS = xno; then
 		AC_MSG_WARN([cblas64.h/cblas.h header file needed by OpenBLAS not found
-Is CCPFLAGS defined to include relevant directory?]))
-	AC_CHECK_LIB(openblas64,main,,FOUNDOPENBLAS=no
-		AC_MSG_WARN([OpenBLAS library (libopenblas64.a) not found
-Is LDFLAGS is defined to include relevant directory?]))
-	if test x$FOUNDOPENBLAS = xyes; then
-		CXXFLAGS="$CXXFLAGS -DLCM_USE_EXTERNAL"
-		AC_DEFINE(HAVE_LIBOPENBLAS)
+Is CCPFLAGS defined to include relevant directory?])
 	else
-		if test x$with_openblas = xyes; then
-			AC_MSG_FAILURE([--with-openblas was given, but OpenBLAS tests failed])
+		FOUNDOPENBLAS=no
+		AC_SEARCH_LIBS([cblas_dgemm],[openblas openblas64],FOUNDOPENBLAS=yes)
+		if test x$FOUNDOPENBLAS = xno; then
+			AC_MSG_WARN([OpenBLAS library (libopenblas64.a/libopenblas.a) not found
+Is LDFLAGS is defined to include relevant directory?])
+			if test x$with_openblas = xyes; then
+				AC_MSG_FAILURE([--with-openblas was given, but OpenBLAS tests failed])
+			fi
+		else
+			CXXFLAGS="$CXXFLAGS -DLCM_USE_EXTERNAL"
+			AC_DEFINE(HAVE_LIBOPENBLAS)
 		fi
 	fi
 fi
