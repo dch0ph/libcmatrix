@@ -257,10 +257,6 @@ but at cost of bulky code */
 /* Define if unsigned int types are u_intXX_t rather than uintXX_t. */
 #undef NEED_UNDERSCORE
 
-/* Define if you have new style iostream i.e. sstream etc. */
-/* NO LONGER TESTED */
-/* #undef HAVE_SSTREAM */
-
 /* Don't change anything below here */
 
 /* Flag that functions only raise exceptions; previous versions returned error codes e.g. for file reads */
