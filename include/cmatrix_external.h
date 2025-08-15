@@ -3,15 +3,9 @@
 
 #define DREAL_PTR double*
 
-#if defined(HAVE_LIBSUNPERF) || defined(HAVE_LIBACML)
+#if defined(HAVE_LIBACML)
 
 #define complex singlecomplex
-#ifdef HAVE_LIBSUNPERF
-#include "sunperf.h"
-#undef complex
-#define LCM_EXT_PREFIX
-#define LCM_EXTERNAL_NAME SunPerf
-#else
 #define LCM_EXTERNAL_NAME ACML
 namespace acml {
 #include "acml.h"
