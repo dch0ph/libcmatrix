@@ -5,9 +5,6 @@
 
 namespace libcmatrix {
 
-//Uncomment to enable alternate input interface
-//#define LCM_ENABLE_ARGSITER
-
 //Uncomment to enable generic periodic symmetry code */
 //#define LCM_ENABLE_GENERICPERIODIC
 
@@ -106,10 +103,6 @@ const int LINE_MAXLEN=256;
 but at cost of bulky code */
 /* #define LCM_FORCE_INLINE */
 
-/* Define to enable C++11 features. Now configured through autoconf */
-/* #define HAVE_CXX11 1 */
-
-//Cut off for un-blocked algorithms
 #ifndef LCM_NAIVE_BELOW
 #define LCM_NAIVE_BELOW 4
 #endif
