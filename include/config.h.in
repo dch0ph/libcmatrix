@@ -216,12 +216,6 @@ but at cost of bulky code */
 /* Define if you have sys/times.h */
 #undef HAVE_SYS_TIMES_H
 
-/* Obselete references to sunmath. No longer checked */
-/* Define if you have the <sunmath.h> header file. */
-/* #undef HAVE_SUNMATH_H */
-/* Define if you have the sunmath library (-lsunmath). */
-/* #undef HAVE_LIBSUNMATH */
-
 /* Define if you have (and are using) pthread.h */
 #undef HAVE_PTHREAD_H
 
