@@ -1360,7 +1360,7 @@ Optional Packages:
   --with-mkl              use the Intel MKL library (default-use no)
   --with-openblas         use the OpenBLAS library (default-use if found)
   --with-atlas            use the ATLAS BLAS library (default-use no)
-  --with-mpi              enable use of MPI (default=no)
+  --with-MPI              enable use of MPI (default=no)
   --with-threads          enable use of multi-threading (default=no)
 
 Some influential environment variables:
