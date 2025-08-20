@@ -40,8 +40,6 @@
 #define LCM_ENUM_CAST(X) int(X)
 #define LCM_ITER_CAT(X) typename ::std::iterator_traits< X >::iterator_category
 
-#define LCM_NULL nullptr
-
 namespace libcmatrix {
 
   extern const char cmatrix_abi_version[]; //!< string (X.Y.Z) identifying library ABI (X major incompatability, Y minor breaking changes, Z fixes only) N.B. first defined for 3.1.0

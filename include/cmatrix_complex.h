@@ -1,5 +1,4 @@
-#ifndef _COMPLEX_H_
-#define _COMPLEX_H_
+#pragma once
 
 #include "basedefs.h" 
 #include <cmath>
@@ -16,11 +15,7 @@
 #endif
 
 #ifdef HAVE_SINCOS
-# ifdef HAVE_SUNMATH_H
-#  include <sunmath.h>
-# else
 extern "C" void sincos(double, double*, double*); // emergency definition in case found library but not header!
-# endif
 namespace libcmatrix {
   inline void cmatrix_sincos(double th, double& s, double& c) { 
     sincos(th,&s,&c); 
@@ -418,5 +413,3 @@ template<typename T> struct doesconj_mla : public binary_function_ip<complex,com
 //  };
   
 } //namespace libcmatrix
-
-#endif /* _COMPLEX_H_ */
