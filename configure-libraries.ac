@@ -109,7 +109,7 @@ fi
 #fi
 
 AC_ARG_WITH(mpi,
-	AS_HELP_STRING([--with-MPI],[enable use of MPI (default=no)]),,with_mpi=no)
+	AS_HELP_STRING([--with-mpi],[enable use of MPI (default=no)]),,with_MPI=no)
 if test x$with_mpi = xyes; then
 	AC_CHECK_HEADERS(mpi.h,,AC_MSG_ERROR([MPI header file (mpi.h) not found
 Check CPPFLAGS (or CXX) is defined to include relevant directory]))
