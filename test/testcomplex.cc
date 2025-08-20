@@ -35,7 +35,7 @@ int main()
   const COMPLEX b(0.7071,0.7071);
   COMPLEX c1,c2,c3,c4,c5;
 
-  const int times=10;//100000000;
+  const int times=200000000;
 
   timer<WallTimer> stopwatch;
   int i;

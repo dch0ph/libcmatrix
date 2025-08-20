@@ -14,6 +14,8 @@ bool showres=false;
 bool issym=false;
 int nmflops=0;
 
+const size_t MAX_XOVER_FAILS = 3;
+
 const char CTMstr[]="CTM";
 
 #ifdef USE_ATLAS
@@ -903,7 +905,7 @@ void find_xover(FILE* fp, optimise_t opdesc)
 {
   const int huge=20000;
   int xover=0;
-  for (;;) {
+  for (size_t fails=1;;fails++) {
     std::pair<int,int> res=doopt(opdesc,2,256,2,true);
     xover=res.first;
     if (xover<=0) {
@@ -914,11 +916,19 @@ void find_xover(FILE* fp, optimise_t opdesc)
     else {
       int step=(xover>=32) ? 2 : 1;
       res=doopt(opdesc,xover/2,xover,step,false);
-      xover=res.first;
-      if (xover<=0)
-	std::cout << "Inconsistent crossover for " << opdesc.opname << ". Repeating...\n";
-      else
-	break;
+      if (res.first <= 0) {
+		  if (fails == 3) {
+			  std::cout << "Failed to find cross-over after " << MAX_XOVER_FAILS << " attempts. Using lower bound.\n";
+			  xover = xover / 2;
+			  break;
+		  }
+		  else
+			std::cout << "Inconsistent crossover for " << opdesc.opname << ". Repeating...\n";
+	  }
+	  else {
+		xover=res.first;
+		break;
+	  }
     }
   }
   if ((opdesc.op=='L') && (xover<huge))

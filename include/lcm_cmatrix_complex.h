@@ -19,7 +19,7 @@ public:
     complex& operator-= (const complex& z) { re-=z.re; im-=z.im; return *this; }
     complex& operator-= (float_t v) { re-=v; return *this; }
     complex& operator*= (const complex& z)
-      { register float_t r=re; re=r*z.re-im*z.im; im=im*z.re+r*z.im; return *this; } 
+      { float_t r=re; re=r*z.re-im*z.im; im=im*z.re+r*z.im; return *this; } 
     complex& operator*= (float_t v) { re*=v; im*=v; return *this; }
     complex& operator/= (const complex& z) { return (*this=(*this)/z); }
     complex& operator/= (float_t v) { re/=v; im/=v; return *this; }

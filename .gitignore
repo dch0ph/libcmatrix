@@ -1,12 +1,24 @@
+# Prerequisites
+*.d
 
 # Compiled Object files
+*.slo
+*.lo
 *.o
 *.obj
+
+# Precompiled Headers
+*.gch
+*.pch
 
 # Compiled Dynamic libraries
 *.so
 *.dylib
 *.dll
+
+# Fortran module files
+*.mod
+*.smod
 
 # Compiled Static libraries
 *.lai
@@ -27,8 +39,9 @@ autom4te.cache
 /aclocal.m4
 /compile
 /config.guess
+include/config.h
 /config.log
-/config.status
+config.status
 /config.sub
 /configure
 /configure.scan
@@ -43,7 +56,5 @@ autom4te.cache
 # (which is called by configure script))
 Makefile
 Makefile_template
-test/Makefile
-include/config.h
 
 .vscode/

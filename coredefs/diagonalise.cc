@@ -627,7 +627,7 @@ void lapack_eigensystem(cmatrix& V, BaseList<complex> eigs, const cmatrix& a0, c
   transpose(a,a0);
   V.create(n,n);
   
-#ifdef USE_SUNPERF
+#ifdef USE_SUNPERFACML
   zgeev('N','V',n,reinterpret_cast<complex*>(a.vector()),n,reinterpret_cast<complex*>(eigs.vector()),(complex*)NULL,1,reinterpret_cast<complex*>(V.vector()),n,&info);
 #else
   complex worktmp=-1000.0;

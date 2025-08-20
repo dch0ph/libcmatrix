@@ -10,7 +10,6 @@ DEFOPTFLAGS="-O2"
 AC_PROG_CXX
 AC_LANG([C++])
 
-prog_sunpro="no"
 if test x$ac_cv_cxx_compiler_gnu = xyes; then
 	if test -z "$SSEFLAGS"; then
 		SSEFLAGS="-msse3 -mfpmath=sse"
@@ -21,19 +20,6 @@ if test x$ac_cv_cxx_compiler_gnu = xyes; then
 	case $host_os in
 		*cygwin* ) CPPFLAGS="$CPPFLAGS -mno-cygwin";;
 	esac
-else
-	CXXFLAGS=$DEFCXXFLAGS
-	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[#ifndef __SUNPRO_CC
-	choke me
-#endif
-	]])],[prog_sunpro="yes"],[])
-	AC_MSG_RESULT([Sun Workshop compiler: $prog_sunpro])
-
-	if test x$prog_sunpro = xyes; then
-		DEFMTFLAGS="-mt"
-		DEFAR="$CXX -xar $CXXFLAGS -o"
-		DEFOPTFLAGS="-fast -xO3 -fsimple=1"
-	fi
 fi
 
 if test -z "$MTFLAGS"; then

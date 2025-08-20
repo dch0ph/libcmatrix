@@ -3,15 +3,9 @@
 
 #define DREAL_PTR double*
 
-#if defined(HAVE_LIBSUNPERF) || defined(HAVE_LIBACML)
+#if defined(HAVE_LIBACML)
 
 #define complex singlecomplex
-#ifdef HAVE_LIBSUNPERF
-#include "sunperf.h"
-#undef complex
-#define LCM_EXT_PREFIX
-#define LCM_EXTERNAL_NAME SunPerf
-#else
 #define LCM_EXTERNAL_NAME ACML
 namespace acml {
 #include "acml.h"
@@ -39,7 +33,11 @@ extern "C" {
 #ifdef HAVE_CBLAS_H
 #include "cblas.h"
 #else
+#ifdef HAVE_CBLAS64_H
+#include "cblas64.h"
+#else
 #include "OpenBLAS/cblas.h"
+#endif
 #endif
 #else
 #define LCM_EXTERNAL_NAME ATLAS

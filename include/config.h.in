@@ -5,26 +5,15 @@
 
 namespace libcmatrix {
 
-//Uncomment to enable alternate input interface
-//#define LCM_ENABLE_ARGSITER
-
 //Uncomment to enable generic periodic symmetry code */
 //#define LCM_ENABLE_GENERICPERIODIC
 
 //Uncomment to enable a bodge for MacOS, see matlabio.h (not yet auto-detected)
 //#define LCM_MACOS_SIZET_BODGE
 
-//Comment out to disable use of some C++11 features
-#define LCM_USE_CXX11
-
-  // Allow tweaking of individual features 
-#ifdef LCM_USE_CXX11
-  // Use extern template feature of C++11 to avoid multiple template instantiation
-  // Note, however, that this means that bounds checking will only be enabled when linking against debugging version of library
+// Use extern template feature of C++11 to avoid multiple template instantiation
+// Note, however, that this means that bounds checking will only be enabled when linking against debugging version of library
 //#define LCM_USE_EXTERNTEMPLATE
-  // Use C++11 nullptr
-#define LCM_USE_NULLPTR
-#endif
 
 // Default size for scratch lists; too big and memory will be wasted, too small and new operations won't be avoided
 //Set to zero to disable "dirty" static allocation by ScratchList (slower but safer)
@@ -114,10 +103,6 @@ const int LINE_MAXLEN=256;
 but at cost of bulky code */
 /* #define LCM_FORCE_INLINE */
 
-/* Define to enable C++11 features. Now configured through autoconf */
-/* #define HAVE_CXX11 1 */
-
-//Cut off for un-blocked algorithms
 #ifndef LCM_NAIVE_BELOW
 #define LCM_NAIVE_BELOW 4
 #endif
@@ -141,7 +126,10 @@ but at cost of bulky code */
 
 /* Define if cblas.h is in top level directory (doesn't need OpenBLAS qualifier) */
 #undef HAVE_CBLAS_H
-  
+ 
+/* Define if cblas64.h being used */
+#undef HAVE_CBLAS64_H
+
 //Cross-over values for external algorithms
 
 #ifndef LCM_INTERNAL_ZMM
@@ -149,13 +137,21 @@ but at cost of bulky code */
 #ifdef HAVE_LIBMKL
 #include "SSE_vs_MKL_xover.h"
 #else
+#ifdef HAVE_ATLAS
 #include "SSE_vs_ATLAS_xover.h"
+#else
+#include "SSE_vs_OpenBLAS64.h"
+#endif
 #endif
 #else
 #ifdef HAVE_LIBMKL
-#error "Illogical combination of using MKL library without SSE optimisation"
+#error "Untested combination of using MKL library without SSE optimisation"
 #else 
-#include "ATLAS_xover.h"
+#ifdef HAVE_LIBOPENBLAS
+#include "nosse_vs_OpenBLAS64_xover.h"
+#else
+#include "msys2_xover.h"
+#endif
 #endif
 #endif
 #endif
@@ -220,12 +216,6 @@ but at cost of bulky code */
 /* Define if you have sys/times.h */
 #undef HAVE_SYS_TIMES_H
 
-/* Obselete references to sunmath. No longer checked */
-/* Define if you have the <sunmath.h> header file. */
-/* #undef HAVE_SUNMATH_H */
-/* Define if you have the sunmath library (-lsunmath). */
-/* #undef HAVE_LIBSUNMATH */
-
 /* Define if you have (and are using) pthread.h */
 #undef HAVE_PTHREAD_H
 
@@ -253,10 +243,6 @@ but at cost of bulky code */
 
 /* Define if unsigned int types are u_intXX_t rather than uintXX_t. */
 #undef NEED_UNDERSCORE
-
-/* Define if you have new style iostream i.e. sstream etc. */
-/* NO LONGER TESTED */
-/* #undef HAVE_SSTREAM */
 
 /* Don't change anything below here */
 
