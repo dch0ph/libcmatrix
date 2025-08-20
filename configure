@@ -1360,7 +1360,7 @@ Optional Packages:
   --with-mkl              use the Intel MKL library (default-use no)
   --with-openblas         use the OpenBLAS library (default-use if found)
   --with-atlas            use the ATLAS BLAS library (default-use no)
-  --with-MPI              enable use of MPI (default=no)
+  --with-mpi              enable use of MPI (default=no)
   --with-threads          enable use of multi-threading (default=no)
 
 Some influential environment variables:
@@ -3244,7 +3244,6 @@ ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ex
 ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 
 
-prog_sunpro="no"
 if test x$ac_cv_cxx_compiler_gnu = xyes; then
 	if test -z "$SSEFLAGS"; then
 		SSEFLAGS="-msse3 -mfpmath=sse"
@@ -3331,36 +3330,6 @@ case $host_os in *\ *) host_os=`echo "$host_os" | sed 's/ /-/g'`;; esac
 	case $host_os in
 		*cygwin* ) CPPFLAGS="$CPPFLAGS -mno-cygwin";;
 	esac
-else
-	CXXFLAGS=$DEFCXXFLAGS
-
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main (void)
-{
-#ifndef __SUNPRO_CC
-	choke me
-#endif
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"
-then :
-  prog_sunpro="yes"
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: Sun Workshop compiler: $prog_sunpro" >&5
-printf "%s\n" "Sun Workshop compiler: $prog_sunpro" >&6; }
-
-	if test x$prog_sunpro = xyes; then
-		DEFMTFLAGS="-mt"
-		DEFAR="$CXX -xar $CXXFLAGS -o"
-		DEFOPTFLAGS="-fast -xO3 -fsimple=1"
-	fi
 fi
 
 if test -z "$MTFLAGS"; then
@@ -3413,7 +3382,8 @@ fi
 MINUITVER=2
 if test x$with_minuit != xno; then
 	FOUNDMINUIT=yes
-	ac_header= ac_cache=
+
+ac_header= ac_cache=
 for ac_item in $ac_header_cxx_list
 do
   if test $ac_cache; then
@@ -3497,7 +3467,7 @@ return conftest::main ();
   return 0;
 }
 _ACEOF
-for ac_lib in '' Minuit2, lcg_Minuit, Minuit
+for ac_lib in '' Minuit2 lcg_Minuit Minuit
 do
   if test -z "$ac_lib"; then
     ac_res="none required"
@@ -3606,7 +3576,7 @@ else $as_nop
 fi
 
 if test x$with_openblas != xno; then
-	FOUNDOPENBLAS=yes
+	FOUNDOPENBLAS=no
 	       for ac_header in cblas64.h cblas.h OpenBLAS/cblas.h
 do :
   as_ac_Header=`printf "%s\n" "ac_cv_header_$ac_header" | $as_tr_sh`
@@ -3616,74 +3586,90 @@ then :
   cat >>confdefs.h <<_ACEOF
 #define `printf "%s\n" "HAVE_$ac_header" | $as_tr_cpp` 1
 _ACEOF
- break
-else $as_nop
-  FOUNDOPENBLAS=no
+ FOUNDOPENBLAS=yes
+fi
+
+done
+	if test x$FOUNDOPENBLAS = xno; then
 		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: cblas64.h/cblas.h header file needed by OpenBLAS not found
 Is CCPFLAGS defined to include relevant directory?" >&5
 printf "%s\n" "$as_me: WARNING: cblas64.h/cblas.h header file needed by OpenBLAS not found
 Is CCPFLAGS defined to include relevant directory?" >&2;}
-fi
-
-done
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for main in -lopenblas64" >&5
-printf %s "checking for main in -lopenblas64... " >&6; }
-if test ${ac_cv_lib_openblas64_main+y}
+	else
+		FOUNDOPENBLAS=no
+		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for library containing cblas_dgemm" >&5
+printf %s "checking for library containing cblas_dgemm... " >&6; }
+if test ${ac_cv_search_cblas_dgemm+y}
 then :
   printf %s "(cached) " >&6
 else $as_nop
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lopenblas64  $LIBS"
+  ac_func_search_save_LIBS=$LIBS
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 namespace conftest {
-  extern "C" int main ();
+  extern "C" int cblas_dgemm ();
 }
 int
 main (void)
 {
-return conftest::main ();
+return conftest::cblas_dgemm ();
   ;
   return 0;
 }
 _ACEOF
-if ac_fn_cxx_try_link "$LINENO"
+for ac_lib in '' openblas openblas64
+do
+  if test -z "$ac_lib"; then
+    ac_res="none required"
+  else
+    ac_res=-l$ac_lib
+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+  fi
+  if ac_fn_cxx_try_link "$LINENO"
 then :
-  ac_cv_lib_openblas64_main=yes
-else $as_nop
-  ac_cv_lib_openblas64_main=no
+  ac_cv_search_cblas_dgemm=$ac_res
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_openblas64_main" >&5
-printf "%s\n" "$ac_cv_lib_openblas64_main" >&6; }
-if test "x$ac_cv_lib_openblas64_main" = xyes
+    conftest$ac_exeext
+  if test ${ac_cv_search_cblas_dgemm+y}
 then :
-  printf "%s\n" "#define HAVE_LIBOPENBLAS64 1" >>confdefs.h
-
-  LIBS="-lopenblas64 $LIBS"
+  break
+fi
+done
+if test ${ac_cv_search_cblas_dgemm+y}
+then :
 
 else $as_nop
-  FOUNDOPENBLAS=no
-		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: OpenBLAS library (libopenblas64.a) not found
-Is LDFLAGS is defined to include relevant directory?" >&5
-printf "%s\n" "$as_me: WARNING: OpenBLAS library (libopenblas64.a) not found
-Is LDFLAGS is defined to include relevant directory?" >&2;}
+  ac_cv_search_cblas_dgemm=no
+fi
+rm conftest.$ac_ext
+LIBS=$ac_func_search_save_LIBS
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_cblas_dgemm" >&5
+printf "%s\n" "$ac_cv_search_cblas_dgemm" >&6; }
+ac_res=$ac_cv_search_cblas_dgemm
+if test "$ac_res" != no
+then :
+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+  FOUNDOPENBLAS=yes
 fi
 
-	if test x$FOUNDOPENBLAS = xyes; then
-		CXXFLAGS="$CXXFLAGS -DLCM_USE_EXTERNAL"
-		printf "%s\n" "#define HAVE_LIBOPENBLAS 1" >>confdefs.h
-
-	else
-		if test x$with_openblas = xyes; then
-			{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+		if test x$FOUNDOPENBLAS = xno; then
+			{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: OpenBLAS library (libopenblas64.a/libopenblas.a) not found
+Is LDFLAGS is defined to include relevant directory?" >&5
+printf "%s\n" "$as_me: WARNING: OpenBLAS library (libopenblas64.a/libopenblas.a) not found
+Is LDFLAGS is defined to include relevant directory?" >&2;}
+			if test x$with_openblas = xyes; then
+				{ { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "--with-openblas was given, but OpenBLAS tests failed
 See \`config.log' for more details" "$LINENO" 5; }
+			fi
+		else
+			CXXFLAGS="$CXXFLAGS -DLCM_USE_EXTERNAL"
+			printf "%s\n" "#define HAVE_LIBOPENBLAS 1" >>confdefs.h
+
 		fi
 	fi
 fi

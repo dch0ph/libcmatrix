@@ -10,11 +10,7 @@ RUN apt-get update && apt-get install -y \
     g++ \
     cmake \
     git \
-    wget \
-    curl \
-    autoconf \
     libopenblas-dev \
-    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # Optional: install Minuit2
@@ -33,16 +29,12 @@ WORKDIR /opt/libcmatrix
 # (Assumes you will mount or COPY the source code into this directory)
 COPY . .
 
-# Configure with OpenBLAS
-RUN ./configure --with-openblas  -with-minuit
-
-# Build the library
-RUN make
+# Configure with OpenBLAS and Minuit
+RUN CPPFLAGS=-I/opt/Minuit2-master/inc LDFLAGS=-I/opt/Minuit2-master/build/lib ./configure --with-openblas  -with-minuit && make
 
 # Optional: build test programs
 # WORKDIR /opt/libcmatrix/test
 # RUN make all || true  # Allow some test programs to fail
-
 
 # Set default working directory
 WORKDIR /opt/libcmatrix

@@ -11,7 +11,6 @@ namespace acml {
 #include "acml.h"
 }
 #define LCM_EXT_PREFIX acml
-#endif
 #define LCM_UPLO 'U'
 #define DCMPLX_PTR LCM_EXT_PREFIX::doublecomplex*
 #define DCMPLX_CPTR LCM_EXT_PREFIX::doublecomplex*
