@@ -120,4 +120,3 @@ Check CPPFLAGS (or CXX) is defined to include relevant directory]))
 fi
 
 AC_CHECK_LIB(rt,clock_gettime)
-AC_CHECK_LIB(fast,memcpy,UNSAFELIBS=-lfast)
