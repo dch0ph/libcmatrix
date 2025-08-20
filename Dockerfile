@@ -40,6 +40,3 @@ RUN CPPFLAGS=-I/opt/Minuit2-master/inc LDFLAGS=-I/opt/Minuit2-master/build/lib .
 WORKDIR /opt/libcmatrix
 
 CMD ["/bin/bash"]
-
-# docker build . -t libcmatrixnew
-# docker run -it --name libcmatrixnew libcmatrixnew
