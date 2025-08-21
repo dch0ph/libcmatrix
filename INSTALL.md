@@ -1,7 +1,9 @@
 
-libcmatrix should in principle work with any Unix-like environment and an ANSI C++ compiler. It has only been thoroughly tested with GCC compilers, currently in a Ubuntu environment, and the configure script will almost certainly need tweaking for other compilers. 
+`libcmatrix` should in principle work with any Unix-like environment and an ANSI C++ compiler. It has only been thoroughly tested with GCC compilers, currently in a Ubuntu environment, and the configure script will almost certainly need tweaking for other compilers. 
 
-**Windows**: It is likely that compilation will work for the Msys2 environment (win64 binaries). But given the availability of Windows Subsystem for Linux, there is litle incentive for supporting native Windows builds.
+**Windows**: It is likely that compilation will work for the Msys2 environment (win64 binaries). But given the availability of Windows Subsystem for Linux, there is litle incentive for supporting native Windows builds. 
+ 
+A **Dockerfile** is now provided for a containerised build. This uses a recent Long-Term-Support Ubuntu (24.04) and sets up a minimalist Ubuntu environment in which `libcmatrix` including Minuit support (but not MPI) is built, before dropping into a command line. 
 
 1. Adding support functionality
 
@@ -27,9 +29,7 @@ The location of the header and library files must be set if these are not alread
 `CPPFLAGS="-I<dir>/include" LDFLAGS="-L<dir>/lib" ./configure`
 
 `--with-atlas` enables use of the ATLAS libraries for fast matrix multiplication etc. 
-This quite challenging to compile and is no longer recommended.
-
-`--with-acml` `--with-mkl` are alternatives to ATLAS/OpenBLAS for optimised for AMD- and Intel-based processors respectively.
+This quite challenging to compile and is no longer recommended. `--with-acml` `--with-mkl` are alternatives to ATLAS/OpenBLAS for optimised for AMD- and Intel-based processors respectively. These have not been recently tested.
 
 
 `--with-threads` enables use of multi-threading.  A special version 
@@ -46,7 +46,7 @@ The configuration script checks for the current API (Minuit2). It no longer work
 
 `--with-sse` enables the use of SSE instructions, which would historically speed up complex arithmetric by a factor of ~2. This introduces more home-brewed code, and the SSE instructions are specific to Intel-type. Currently not recommended.
 
-3. `make lib/libmatrix.a` will create the libcmatrix.a library. Other variants exist for debugging (-g) and profiling (-pg).  
+3. `make` will create the `libcmatrix.a` library. Other variants exist for debugging (-g) and profiling (-pg), e.g.`make libcmatrix-g.a`. Expect lengthy warnings about features that are deprecated in current versions of C++; hopefully these will not be removed soon!  
 
 If only compiling libcmatrix for linking with other programs such as pNMRsim, stop here.
 
@@ -61,7 +61,7 @@ These are mostly demonstrations of different aspects of the library rather than 
 such a matrix multiplication can be checked to ensure that appropriate "tuning"
 options have been selected.  The `testops` programs determines the floating point "throughput" (in megaflops/s) of various
 operations as a function of matrix size.  The peak performance should be of the same order as the CPU clock speed.
-Note that for every operation that uses the external libtaries, there is a "cross-over" point,
+Note that for every operation that uses the external libraries, there is a "cross-over" point,
 with the external libtary only being used for larger matrices / vectors. `testops` can be used
 to search for these cross-over points, which will be architecture dependent. The fact that 
 external libraries are only effective in some cases is a motivation for avoiding them if not needed!
