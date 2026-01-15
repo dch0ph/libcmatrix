@@ -4,8 +4,8 @@
 #include "optim.h"
 #include "ttyio.h"
 #include <vector>
-#include "Minuit/VariableMetricMinimizer.h"
-#include "Minuit/FunctionMinimum.h"
+#include "Minuit2/VariableMetricMinimizer.h"
+#include "Minuit2/FunctionMinimum.h"
 
 using namespace std;
 using namespace libcmatrix;
